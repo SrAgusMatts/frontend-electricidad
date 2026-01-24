@@ -1,26 +1,115 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* 👇 DEFINIMOS CLASES GLOBALES */
+@layer components {
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  /* --- TARJETAS (CATÁLOGO) --- */
+  .card {
+    @apply bg-white rounded-lg shadow-md overflow-hidden flex flex-col h-full transition-shadow duration-300;
   }
-}
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  .card:hover {
+    @apply shadow-xl;
+  }
+
+  .card-image-container {
+    @apply relative h-48 w-full bg-gray-200 flex items-center justify-center overflow-hidden;
+  }
+
+  .card-image {
+    @apply object-cover w-full h-full transition-transform duration-300;
+  }
+
+  /* Efecto: cuando hago hover en la .card padre, la .card-image hija hace zoom */
+  .card:hover .card-image {
+    @apply scale-105;
+  }
+
+  .card-body {
+    @apply p-4 flex flex-col flex-grow;
+  }
+
+  /* --- TEXTOS (CATÁLOGO) --- */
+  .text-title-card {
+    @apply text-xl font-semibold text-gray-800 line-clamp-1;
+  }
+
+  .text-desc-card {
+    @apply text-gray-600 text-sm mt-1 line-clamp-2 flex-grow;
+  }
+
+  .text-price {
+    @apply text-2xl font-bold text-green-600;
+  }
+
+  /* --- BOTONES GENERALES --- */
+  .btn-primary {
+    @apply bg-blue-600 text-white px-4 py-2 rounded transition-colors duration-300;
+  }
+
+  .btn-primary:hover {
+    @apply bg-blue-700;
+  }
+
+  /* =========================================
+     ESTILOS DEL LOGIN/REGISTER (TEMA ELÉCTRICO) ⚡
+     ========================================= */
+  
+  /* Fondo: Azul oscuro profundo con un toque de gris industrial */
+  .login-bg {
+    @apply min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 p-4;
+  }
+
+  /* La tarjeta de vidrio (ahora un poco más oscura para contrastar) */
+  .glass-card {
+    @apply relative bg-slate-900/40 backdrop-blur-md border border-white/10 rounded-2xl shadow-2xl p-8 max-w-sm w-full overflow-visible;
+  }
+
+  /* Contenedor del ícono */
+  .glass-icon-wrapper {
+    @apply absolute -top-8 left-1/2 transform -translate-x-1/2;
+  }
+
+  /* El círculo del ícono: Ahora es AMARILLO ELÉCTRICO ⚡ */
+  .glass-icon-circle {
+    @apply w-16 h-16 bg-gradient-to-tr from-yellow-400 to-orange-500 rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(250,204,21,0.5)];
+  }
+
+  /* Título */
+  .glass-title {
+    @apply text-3xl font-bold text-center text-white mt-6 mb-8 tracking-wide uppercase;
+  }
+
+  /* Input group */
+  .glass-input-group {
+    @apply flex items-center bg-slate-800/80 border border-slate-600 rounded-lg px-3 py-2 shadow-inner transition-colors duration-200;
+  }
+  /* Efecto al hacer foco en el input: Borde azul brillante */
+  .glass-input-group:focus-within {
+    @apply border-blue-400 ring-1 ring-blue-400;
+  }
+
+  /* Input field */
+  .glass-input-field {
+    @apply flex-1 bg-transparent outline-none text-white placeholder-gray-400 ml-2;
+  }
+
+  /* Botón: Azul Eléctrico intenso */
+  .btn-gradient {
+    @apply w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white font-bold py-3 rounded-lg shadow-lg border border-blue-500/30 transition-all duration-200 uppercase tracking-wider;
+  }
+  .btn-gradient:hover {
+    @apply shadow-blue-500/50 brightness-110 transform -translate-y-0.5;
+  }
+
+  /* Textos pequeños */
+  .glass-text-small {
+    @apply text-gray-300 text-sm;
+  }
+  
+  .glass-link {
+    @apply text-yellow-400 hover:text-yellow-300 hover:underline cursor-pointer transition-colors;
+  }
 }

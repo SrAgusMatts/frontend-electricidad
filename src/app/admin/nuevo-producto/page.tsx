@@ -2,19 +2,16 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { crearProducto } from "@/services/api";
+import { crearProducto, obtenerMarcas, Marca } from "@/services/api";
 import Navbar from "@/components/Navbar";
 import Toast from "@/components/Toast";
 import { HiSave, HiArrowLeft, HiPhotograph } from "react-icons/hi";
+import SelectorMarca from "@/components/SelectorMarca";
 import Link from "next/link";
 
 export default function NuevoProductoPage() {
     const router = useRouter();
-
-    // Estado para la notificación
     const [toast, setToast] = useState({ show: false, message: "", type: "success" as "success" | "error" });
-
-    // Estados del formulario
     const [nombre, setNombre] = useState("");
     const [descripcion, setDescripcion] = useState("");
     const [precio, setPrecio] = useState("");
@@ -24,7 +21,9 @@ export default function NuevoProductoPage() {
     const [categoriaId, setCategoriaId] = useState("1");
     const [imagenArchivo, setImagenArchivo] = useState<File | null>(null);
     const [preview, setPreview] = useState<string | null>(null);
-    const [marca, setMarca] = useState("");
+    const [marcas, setMarcas] = useState<any[]>([]);
+    const [marcasDisponibles, setMarcasDisponibles] = useState<Marca[]>([]);
+    const [marcaId, setMarcaId] = useState<number | "">("");
 
     useEffect(() => {
         const usuario = JSON.parse(localStorage.getItem("usuarioMattos") || "null");
@@ -32,6 +31,18 @@ export default function NuevoProductoPage() {
             router.push("/");
         }
     }, [router]);
+
+    useEffect(() => {
+        async function cargar() {
+            try {
+                const datos = await obtenerMarcas();
+                setMarcasDisponibles(datos);
+            } catch (e) {
+                console.error("No se pudieron cargar las marcas");
+            }
+        }
+        cargar();
+    }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -44,13 +55,17 @@ export default function NuevoProductoPage() {
             formData.append("Precio", precio);
             formData.append("Stock", stock);
             formData.append("CategoriaId", categoriaId);
-            formData.append("Marca", marca);
+
+            if (marcaId) {
+                formData.append("MarcaId", marcaId.toString());
+            } else {
+                formData.append("MarcaId", "1");
+            }
 
             if (imagenArchivo) {
                 formData.append("Imagen", imagenArchivo);
             }
 
-            // 2. Enviamos el FormData
             await crearProducto(formData);
 
             setToast({ show: true, message: "¡Producto creado con éxito!", type: "success" });
@@ -63,11 +78,15 @@ export default function NuevoProductoPage() {
         }
     };
 
+    const handleNuevaMarca = (nueva: Marca) => {
+        setMarcasDisponibles([...marcasDisponibles, nueva]);
+    };
+
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
             setImagenArchivo(file);
-            setPreview(URL.createObjectURL(file)); // Creamos una URL temporal para verla
+            setPreview(URL.createObjectURL(file));
         }
     };
 
@@ -82,7 +101,6 @@ export default function NuevoProductoPage() {
 
                     <form onSubmit={handleSubmit}>
 
-                        {/* Nombre */}
                         <div className="mb-4">
                             <label className="form-label">Nombre del Producto</label>
                             <input
@@ -95,35 +113,29 @@ export default function NuevoProductoPage() {
                             />
                         </div>
 
-                        {/* Selector de Categoría */}
-                        <div className="mb-4">
-                            <label className="form-label">Categoría</label>
-                            <select
-                                className="form-input"
-                                value={categoriaId}
-                                onChange={(e) => setCategoriaId(e.target.value)}
-                            >
-                                <option value="1">🔌 Cables</option>
-                                <option value="2">💡 Iluminación</option>
-                                <option value="3">🔧 Accesorios / Herramientas</option>
-                            </select>
-                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
 
-                        {/* Marca */}
-                        <div className="mb-4">
+                            <div>
+                                <label className="form-label">Categoría</label>
+                                <select className="form-input" value={categoriaId} onChange={(e) => setCategoriaId(e.target.value)}>
+                                    <option value="1">🔌 Cables</option>
+                                    <option value="2">💡 Iluminación</option>
+                                    <option value="3">🔧 Accesorios / Herramientas</option>
+                                </select>
+                            </div>
+
                             <div>
                                 <label className="form-label">Marca</label>
-                                <input
-                                    type="text"
-                                    className="form-input"
-                                    placeholder="Ej: Schneider, Philips"
-                                    value={marca}
-                                    onChange={(e) => setMarca(e.target.value)}
+                                <SelectorMarca
+                                    marcas={marcasDisponibles}
+                                    marcaSeleccionadaId={marcaId}
+                                    onSeleccionar={(id) => setMarcaId(id)}
+                                    onNuevaMarcaCreada={handleNuevaMarca}
                                 />
                             </div>
+
                         </div>
 
-                        {/* Descripción */}
                         <div className="mb-4">
                             <label className="form-label">Descripción</label>
                             <textarea
@@ -136,7 +148,6 @@ export default function NuevoProductoPage() {
                             />
                         </div>
 
-                        {/* Precio y Stock (en 2 columnas) */}
                         <div className="grid grid-cols-2 gap-4 mb-4">
                             <div>
                                 <label className="form-label">Precio ($)</label>
@@ -161,24 +172,21 @@ export default function NuevoProductoPage() {
                             </div>
                         </div>
 
-                        {/* URL Imagen */}
                         <div className="mb-6">
                             <label className="form-label">Imagen del Producto</label>
 
                             <div className="flex items-center gap-4">
-                                {/* Botón visual para subir */}
                                 <label className="cursor-pointer bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg border border-gray-300 flex items-center gap-2 transition-colors">
                                     <HiPhotograph className="text-xl" />
                                     <span>Elegir archivo...</span>
                                     <input
                                         type="file"
-                                        accept="image/*" // Solo acepta imágenes
-                                        className="hidden" // Ocultamos el input feo original
+                                        accept="image/*"
+                                        className="hidden" 
                                         onChange={handleFileChange}
                                     />
                                 </label>
 
-                                {/* Nombre del archivo seleccionado */}
                                 <span className="text-sm text-gray-500 italic">
                                     {imagenArchivo ? imagenArchivo.name : "Ningún archivo seleccionado"}
                                 </span>
@@ -188,21 +196,20 @@ export default function NuevoProductoPage() {
                             {preview && (
                                 <div className="mt-4">
                                     <p className="text-xs text-gray-500 mb-1">Vista previa:</p>
-                                    {/* eslint-disable-next-line @next/next/no-img-element */}
                                     <img src={preview} alt="Vista previa" className="h-32 w-32 object-cover rounded-lg border border-gray-300 shadow-sm" />
                                 </div>
                             )}
                         </div>
 
-                        {/* Botones */}
-                        <button type="submit" className="btn-save" disabled={loading}>
-                            <HiSave className="text-xl" />
-                            {loading ? "Guardando..." : "Guardar Producto"}
-                        </button>
+                        <div className="form-actions">
+                            <button type="submit" disabled={loading} className="btn-form-submit">
+                                {loading ? "Guardando..." : "Guardar Producto"}
+                            </button>
 
-                        <Link href="/" className="btn-cancel">
-                            Cancelar
-                        </Link>
+                            <button type="button" onClick={() => router.back()} className="btn-cancel">
+                                Cancelar
+                            </button>
+                        </div>
 
                     </form>
                 </div>

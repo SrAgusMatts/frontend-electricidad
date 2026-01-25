@@ -2,21 +2,18 @@
 
 import { useState } from "react";
 import Link from "next/link";
-// Agregamos HiMail para el campo de correo
 import { HiUser, HiLockClosed, HiIdentification, HiMail } from "react-icons/hi";
 import { registrarUsuario } from "@/services/api";
 import { useRouter } from "next/navigation";
 import Toast from "@/components/Toast";
 
 export default function RegisterPage() {
-    // Estado para la notificación (Toast)
     const [toast, setToast] = useState({ show: false, message: "", type: "success" as "success" | "error" });
     
     const mostrarNotificacion = (message: string, type: "success" | "error") => {
         setToast({ show: true, message, type });
     };
 
-    // Estados del formulario
     const [nombre, setNombre] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -26,23 +23,19 @@ export default function RegisterPage() {
         e.preventDefault();
 
         try {
-            // Llamamos al backend
             await registrarUsuario({
                 nombre,
                 email,
                 password
             });
 
-            // Si sale bien:
             mostrarNotificacion(`¡Bienvenido, ${nombre}!`, "success");
             
-            // Redirigimos después de 1.5 segundos para que lean el mensaje
             setTimeout(() => {
                 router.push("/login");
             }, 1500);
 
         } catch (error: any) {
-            // Si sale mal (ej: email repetido)
             mostrarNotificacion("Error: " + (error.message || "Intentá de nuevo."), "error");
         }
     };
@@ -58,7 +51,6 @@ export default function RegisterPage() {
             
             <div className="glass-card">
 
-                {/* Icono superior */}
                 <div className="glass-icon-wrapper">
                     <div className="glass-icon-circle">
                         <HiIdentification className="text-slate-900 text-3xl" />
@@ -69,7 +61,6 @@ export default function RegisterPage() {
 
                 <form onSubmit={handleSubmit} className="space-y-5">
 
-                    {/* Input: Nombre Completo */}
                     <div className="glass-input-group">
                         <HiUser className="text-gray-400 text-xl" />
                         <input
@@ -82,7 +73,6 @@ export default function RegisterPage() {
                         />
                     </div>
 
-                    {/* Input: Email (Con ícono de Mail) */}
                     <div className="glass-input-group">
                         <HiMail className="text-gray-400 text-xl" />
                         <input
@@ -95,7 +85,6 @@ export default function RegisterPage() {
                         />
                     </div>
 
-                    {/* Input: Contraseña */}
                     <div className="glass-input-group">
                         <HiLockClosed className="text-gray-400 text-xl" />
                         <input
@@ -114,7 +103,6 @@ export default function RegisterPage() {
 
                 </form>
 
-                {/* Footer: Volver al login */}
                 <div className="mt-8 text-center glass-text-small">
                     <div className="border-t border-white/10 pt-4">
                         ¿Ya tenés cuenta?{" "}

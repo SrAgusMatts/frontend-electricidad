@@ -10,18 +10,22 @@ export interface Producto {
     stock: number;
     categoriaId?: number;
     categoria?: { nombre: string };
-    marca: string;
+    marca?: Marca;
+}
+
+export interface Marca {
+    id: number;
+    nombre: string;
 }
 
 const PUERTO = 7081;
 
 export async function obtenerProductos(): Promise<Producto[]> {
-    // Esto arregla el error de certificado local (solo para desarrollo)
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
     try {
         const res = await fetch(`${API_URL}/Productos`, {
-            cache: 'no-store' // Datos siempre frescos
+            cache: 'no-store'
         });
 
         if (!res.ok) {
@@ -31,7 +35,7 @@ export async function obtenerProductos(): Promise<Producto[]> {
         return await res.json();
     } catch (error) {
         console.error("Error en el servicio obtenerProductos:", error);
-        return []; // Retornamos array vacío para que no explote la UI
+        return [];
     }
 }
 
@@ -40,7 +44,7 @@ export async function obtenerProductoPorId(id: number) {
 
     try {
         const res = await fetch(`https://localhost:${PUERTO}/api/Productos/${id}`, {
-            cache: 'no-store' // Datos siempre frescos
+            cache: 'no-store'
         });
 
         if (!res.ok) throw new Error("Producto no encontrado");
@@ -48,12 +52,33 @@ export async function obtenerProductoPorId(id: number) {
         return await res.json();
     } catch (error) {
         console.error("Error en el servicio obtenerProductos:", error);
-        return []; // Retornamos array vacío para que no explote la UI
+        return [];
     }
 }
 
+export async function crearMarca(nombre: string): Promise<Marca> {
+    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+
+    const res = await fetch(`https://localhost:${PUERTO}/api/Marcas`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nombre }),
+    });
+
+    if (!res.ok) throw new Error("Error al crear marca");
+    return await res.json();
+}
+
+export async function obtenerMarcas(): Promise<Marca[]> {
+    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+
+    const res = await fetch(`https://localhost:${PUERTO}/api/Marcas`);
+    if (!res.ok) throw new Error("Error al cargar marcas");
+
+    return await res.json();
+}
+
 export async function registrarUsuario(datos: any) {
-    // Asegurate que esta URL apunte a TU puerto (el mismo de antes)
     const API_URL = `https://localhost:${PUERTO}/api/Usuarios/registro`;
 
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
@@ -68,7 +93,6 @@ export async function registrarUsuario(datos: any) {
         });
 
         if (!res.ok) {
-            // Si el backend responde error (ej: email repetido), leemos el mensaje
             const mensajeError = await res.text();
             throw new Error(mensajeError);
         }
@@ -94,7 +118,6 @@ export async function loginUsuario(datos: any) {
         });
 
         if (!res.ok) {
-            // Si el login falla (contraseña mal), tiramos error
             throw new Error("Correo o contraseña incorrectos");
         }
 
@@ -104,7 +127,6 @@ export async function loginUsuario(datos: any) {
     }
 }
 
-// Ahora recibe "FormData" en lugar de un objeto simple
 export async function crearProducto(datos: FormData) {
     const API_URL = `https://localhost:${PUERTO}/api/Productos`;
 

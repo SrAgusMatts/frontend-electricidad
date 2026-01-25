@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { HiUser, HiLockClosed } from "react-icons/hi";
 import { loginUsuario } from "@/services/api";
-// 1. Importamos el Toast
 import Toast from "@/components/Toast";
 
 export default function LoginPage() {
@@ -13,7 +12,6 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const router = useRouter();
 
-  // 2. Estado para manejar la notificación
   const [toast, setToast] = useState({ show: false, message: "", type: "success" as "success" | "error" });
 
   const mostrarNotificacion = (message: string, type: "success" | "error") => {
@@ -26,25 +24,21 @@ export default function LoginPage() {
     try {
       const usuario = await loginUsuario({ email, password });
 
-      // 3. Usamos el Toast en lugar de alert
       mostrarNotificacion(`¡Bienvenido, ${usuario.nombre}!`, "success");
 
       localStorage.setItem("usuarioMattos", JSON.stringify(usuario));
 
-      // Esperamos un poquito para que el usuario lea el mensaje antes de cambiar de página
       setTimeout(() => {
         router.push("/");
       }, 1500);
 
     } catch (error) {
-      // 3. Usamos el Toast de error
       mostrarNotificacion("Credenciales incorrectas. Intentá de nuevo.", "error");
     }
   };
 
   return (
     <div className="login-bg">
-      {/* 4. Renderizamos el componente Toast siempre (él sabe cuándo mostrarse) */}
       <Toast
         show={toast.show}
         message={toast.message}
@@ -53,9 +47,6 @@ export default function LoginPage() {
       />
 
       <div className="glass-card">
-        {/* ... (Todo el resto del código del login queda IGUAL) ... */}
-        {/* Solo copio la parte del formulario para ahorrar espacio, pero vos dejá todo lo visual igual */}
-
         <div className="glass-icon-wrapper">
           <div className="glass-icon-circle">
             <HiUser className="text-slate-900 text-3xl" />

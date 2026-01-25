@@ -8,12 +8,9 @@ interface ProductProps {
 
 export default function ProductCard({ producto }: ProductProps) {
   return (
-    // Usamos las clases globales directamente (strings)
     <div className="card">
       
-      {/* Imagen */}
       <div className="card-image-container">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img 
           src={producto.imagenUrl} 
           alt={producto.nombre}
@@ -21,7 +18,6 @@ export default function ProductCard({ producto }: ProductProps) {
         />
       </div>
 
-      {/* Contenido */}
       <div className="card-body">
         <h2 className="text-title-card">
           {producto.nombre}

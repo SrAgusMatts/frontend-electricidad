@@ -13,7 +13,6 @@ export default function AdminPanelPage() {
     const [filtroCategoria, setFiltroCategoria] = useState("todos");
     const [toast, setToast] = useState({ show: false, message: "", type: "success" as "success" | "error" });
 
-    // Cargar productos al iniciar
     useEffect(() => {
         cargarProductos();
     }, []);
@@ -23,20 +22,18 @@ export default function AdminPanelPage() {
         setProductos(data);
     };
 
-    // Lógica de Borrado
     const handleBorrar = async (id: number) => {
         if (confirm("¿Estás seguro de eliminar este producto? No hay vuelta atrás.")) {
             try {
                 await eliminarProducto(id);
                 setToast({ show: true, message: "Producto eliminado", type: "success" });
-                cargarProductos(); // Recargamos la tabla
+                cargarProductos();
             } catch (error) {
                 setToast({ show: true, message: "Error al eliminar", type: "error" });
             }
         }
     };
 
-    // Lógica de Filtrado (Magia en tiempo real ✨)
     const productosFiltrados = productos.filter((prod) => {
         const coincideNombre = prod.nombre.toLowerCase().includes(busqueda.toLowerCase());
         const coincideCategoria = filtroCategoria === "todos"
@@ -53,15 +50,14 @@ export default function AdminPanelPage() {
 
             <div className="max-w-7xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
 
-                {/* Encabezado */}
                 <div className="flex justify-between items-center mb-8">
                     <h1 className="text-3xl font-bold text-gray-900">Panel de Control</h1>
-                    <Link href="/admin/nuevo-producto" className="btn-save w-auto mt-0">
-                        <HiPlus className="text-xl" /> Nuevo Producto
+                    <Link href="/admin/nuevo-producto" className="btn-panel-create">
+                        <HiPlus className="text-xl" />
+                        Nuevo Producto
                     </Link>
                 </div>
 
-                {/* Barra de Filtros */}
                 <div className="filter-bar">
                     <div className="relative">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -107,7 +103,6 @@ export default function AdminPanelPage() {
                                     <td className="td-cell text-gray-500">#{prod.id}</td>
 
                                     <td className="td-cell font-medium text-gray-900 flex items-center gap-3">
-                                        {/* eslint-disable-next-line @next/next/no-img-element */}
                                         <img src={prod.imagenUrl} alt="" className="h-10 w-10 rounded-full object-cover border" />
                                         {prod.nombre}
                                     </td>

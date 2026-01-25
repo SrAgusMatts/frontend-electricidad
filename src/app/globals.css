@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* 👇 DEFINIMOS CLASES GLOBALES */
 @layer components {
 
   /* --- TARJETAS (CATÁLOGO) --- */
@@ -22,7 +21,6 @@
     @apply object-cover w-full h-full transition-transform duration-300;
   }
 
-  /* Efecto: cuando hago hover en la .card padre, la .card-image hija hace zoom */
   .card:hover .card-image {
     @apply scale-105;
   }
@@ -31,7 +29,7 @@
     @apply p-4 flex flex-col flex-grow;
   }
 
-  /* --- TEXTOS (CATÁLOGO) --- */
+  /* --- TEXTOS --- */
   .text-title-card {
     @apply text-xl font-semibold text-gray-800 line-clamp-1;
   }
@@ -44,7 +42,7 @@
     @apply text-2xl font-bold text-green-600;
   }
 
-  /* --- BOTONES GENERALES --- */
+  /* --- BOTONES --- */
   .btn-primary {
     @apply bg-blue-600 text-white px-4 py-2 rounded transition-colors duration-300;
   }
@@ -56,60 +54,333 @@
   /* =========================================
      ESTILOS DEL LOGIN/REGISTER (TEMA ELÉCTRICO) ⚡
      ========================================= */
-  
-  /* Fondo: Azul oscuro profundo con un toque de gris industrial */
+
   .login-bg {
-    @apply min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 p-4;
+    @apply min-h-screen flex items-center justify-center bg-gradient-to-b from-slate-900 via-blue-900 to-slate-900 p-4;
   }
 
-  /* La tarjeta de vidrio (ahora un poco más oscura para contrastar) */
   .glass-card {
-    @apply relative bg-slate-900/40 backdrop-blur-md border border-white/10 rounded-2xl shadow-2xl p-8 max-w-sm w-full overflow-visible;
+    @apply relative bg-slate-900/60 backdrop-blur-md border border-white/10 rounded-xl shadow-2xl p-8 max-w-sm w-full overflow-visible;
   }
 
-  /* Contenedor del ícono */
   .glass-icon-wrapper {
     @apply absolute -top-8 left-1/2 transform -translate-x-1/2;
   }
 
-  /* El círculo del ícono: Ahora es AMARILLO ELÉCTRICO ⚡ */
+  /* 🛠️ ACÁ ESTABA EL ERROR: Usamos box-shadow normal para evitar fallos de compilación */
   .glass-icon-circle {
-    @apply w-16 h-16 bg-gradient-to-tr from-yellow-400 to-orange-500 rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(250,204,21,0.5)];
+    @apply w-16 h-16 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center border-4 border-slate-900;
+    box-shadow: 0 0 20px rgba(250, 204, 21, 0.6);
   }
 
-  /* Título */
   .glass-title {
-    @apply text-3xl font-bold text-center text-white mt-6 mb-8 tracking-wide uppercase;
+    @apply text-3xl font-bold text-center text-white mt-6 mb-8 tracking-wider uppercase drop-shadow-lg;
   }
 
-  /* Input group */
   .glass-input-group {
-    @apply flex items-center bg-slate-800/80 border border-slate-600 rounded-lg px-3 py-2 shadow-inner transition-colors duration-200;
+    @apply flex items-center bg-slate-800 border border-slate-600 rounded-lg px-3 py-3 shadow-inner transition-colors duration-200;
   }
-  /* Efecto al hacer foco en el input: Borde azul brillante */
+
   .glass-input-group:focus-within {
-    @apply border-blue-400 ring-1 ring-blue-400;
+    @apply border-yellow-500 ring-1 ring-yellow-500;
   }
 
-  /* Input field */
   .glass-input-field {
-    @apply flex-1 bg-transparent outline-none text-white placeholder-gray-400 ml-2;
+    @apply flex-1 bg-transparent outline-none text-white placeholder-gray-400 ml-2 font-medium;
   }
 
-  /* Botón: Azul Eléctrico intenso */
   .btn-gradient {
-    @apply w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white font-bold py-3 rounded-lg shadow-lg border border-blue-500/30 transition-all duration-200 uppercase tracking-wider;
-  }
-  .btn-gradient:hover {
-    @apply shadow-blue-500/50 brightness-110 transform -translate-y-0.5;
+    @apply w-full bg-gradient-to-r from-yellow-500 to-orange-500 text-slate-900 font-extrabold py-3 rounded-lg shadow-lg hover:shadow-yellow-500/20 transition-all duration-200 uppercase tracking-widest transform hover:-translate-y-0.5;
   }
 
-  /* Textos pequeños */
   .glass-text-small {
-    @apply text-gray-300 text-sm;
+    @apply text-slate-400 text-sm;
   }
-  
+
   .glass-link {
-    @apply text-yellow-400 hover:text-yellow-300 hover:underline cursor-pointer transition-colors;
+    @apply text-yellow-400 hover:text-yellow-300 font-semibold hover:underline cursor-pointer transition-colors;
+  }
+
+  /* =========================================
+     NOTIFICACIONES (TOAST) 🔔
+     ========================================= */
+  .toast-base {
+    @apply fixed top-5 right-5 z-50 flex items-center px-6 py-4 rounded-lg shadow-2xl transition-all duration-500 transform font-bold text-white min-w-[300px];
+  }
+
+  .toast-visible {
+    @apply opacity-100 translate-x-0;
+  }
+
+  .toast-hidden {
+    @apply opacity-0 translate-x-10 pointer-events-none;
+  }
+
+  .toast-success {
+    @apply bg-green-600 border-l-4 border-green-300;
+  }
+
+  .toast-error {
+    @apply bg-red-600 border-l-4 border-red-300;
+  }
+
+  /* =========================================
+     BARRA DE NAVEGACIÓN (NAVBAR) 🧭
+     ========================================= */
+
+  .navbar {
+    @apply bg-slate-900 text-white shadow-lg border-b border-slate-800 sticky top-0 z-40;
+  }
+
+  .nav-container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .nav-wrapper {
+    @apply flex items-center justify-between h-16;
+  }
+
+  .nav-logo {
+    @apply text-xl font-bold tracking-wider hover:text-yellow-400 transition-colors flex items-center gap-2;
+  }
+
+  /* Contenedor del menú en escritorio */
+  .nav-menu-desktop {
+    @apply hidden md:block;
+  }
+
+  .nav-items-wrapper {
+    @apply ml-10 flex items-center space-x-4;
+  }
+
+  .nav-link {
+    @apply hover:text-yellow-400 px-3 py-2 rounded-md text-sm font-medium transition-colors;
+  }
+
+  /* Badge del Usuario (El globito con el nombre) */
+  .nav-user-badge {
+    @apply flex items-center gap-2 text-yellow-400 font-semibold bg-slate-800 px-3 py-1 rounded-full border border-slate-700 ml-4;
+  }
+
+  /* Botón Salir */
+  .nav-btn-logout {
+    @apply flex items-center gap-1 text-gray-400 hover:text-red-400 transition-colors text-sm font-medium ml-4 cursor-pointer;
+  }
+
+  /* Botón Ingresar (Estilo especial amarillo) */
+  .nav-btn-login {
+    @apply bg-yellow-500 text-slate-900 hover:bg-yellow-400 px-4 py-2 rounded-md text-sm font-bold transition-all transform hover:-translate-y-0.5 shadow-lg shadow-yellow-500/20;
+  }
+
+  /* =========================================
+     CONTROLES DE ADMIN 🛡️
+     ========================================= */
+
+  /* Botón verde para agregar cosas */
+  .nav-btn-admin {
+    @apply bg-emerald-600 text-white px-3 py-2 rounded-md text-sm font-bold transition-all hover:bg-emerald-500 flex items-center gap-2 shadow-lg ml-4 border border-emerald-400/30;
+  }
+
+  /* Efecto hover para que se levante un poquito */
+  .nav-btn-admin:hover {
+    @apply transform -translate-y-0.5 shadow-emerald-500/20;
+  }
+
+  .nav-divider {
+    @apply h-8 w-px bg-slate-700 mx-6;
+  }
+
+  /* Contenedor de herramientas de usuario (para agruparlas mejor) */
+  .nav-user-tools {
+    @apply flex items-center gap-2;
+  }
+
+  /* =========================================
+     FORMULARIOS ADMIN (MODO CLARO) 📝
+     ========================================= */
+
+  .admin-container {
+    @apply max-w-2xl mx-auto py-10 px-4 sm:px-6 lg:px-8;
+  }
+
+  /* El contenedor blanco del formulario */
+  .admin-card {
+    @apply bg-white rounded-xl shadow-lg border border-gray-200 p-8;
+  }
+
+  .admin-title {
+    @apply text-2xl font-bold text-gray-900 mb-6 border-b pb-4 border-gray-100;
+  }
+
+  /* Labels (Etiquetas) */
+  .form-label {
+    @apply block text-sm font-semibold text-gray-700 mb-2;
+  }
+
+  /* Inputs (Cajitas de texto) */
+  .form-input {
+    @apply w-full px-4 py-3 rounded-lg border border-gray-300 text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all;
+  }
+
+  /* Botón de Guardar */
+  .btn-save {
+    @apply w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 rounded-lg shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2 mt-6;
+  }
+
+  /* Botón Cancelar */
+  .btn-cancel {
+    @apply w-full bg-white hover:bg-gray-50 text-gray-700 font-semibold py-3 px-4 rounded-lg border border-gray-300 shadow-sm hover:shadow transition-all mt-3 text-center block;
+  }
+
+  /* =========================================
+     TABLA ADMIN DASHBOARD 📊
+     ========================================= */
+
+  .table-container {
+    @apply overflow-x-auto bg-white rounded-lg shadow border border-gray-200;
+  }
+
+  .admin-table {
+    @apply min-w-full divide-y divide-gray-200;
+  }
+
+  .table-head {
+    @apply bg-gray-50;
+  }
+
+  .th-cell {
+    @apply px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider;
+  }
+
+  .tbody-row {
+    @apply bg-white hover:bg-gray-50 transition-colors;
+  }
+
+  .td-cell {
+    @apply px-6 py-4 whitespace-nowrap text-sm text-gray-700;
+  }
+
+  /* Filtros y Buscador */
+  .filter-bar {
+    @apply flex flex-col sm:flex-row justify-between items-center gap-4 mb-6;
+  }
+
+  .search-input {
+    @apply pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 outline-none w-full sm:w-64;
+  }
+
+  .category-select {
+    @apply border border-gray-300 rounded-lg px-4 py-2 focus:ring-blue-500 outline-none bg-white text-gray-700;
+  }
+
+  /* Botones de Acción (Editar/Borrar) */
+  .action-btn-edit {
+    @apply text-blue-600 hover:text-blue-900 mr-4 font-medium transition-colors;
+  }
+
+  .action-btn-delete {
+    @apply text-red-600 hover:text-red-900 font-medium transition-colors;
+  }
+
+  /* =========================================
+     DETALLE DEL PRODUCTO 🛍️
+     ========================================= */
+
+  .product-detail-container {
+    @apply max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8;
+  }
+
+  .product-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 gap-12 items-start;
+  }
+
+  /* Columna Imagen */
+  .detail-image-wrapper {
+    @apply relative bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200;
+  }
+
+  .detail-image {
+    @apply w-full h-auto object-cover transform hover:scale-105 transition-transform duration-500;
+  }
+
+  /* Columna Info */
+  .detail-info {
+    @apply flex flex-col space-y-6;
+  }
+
+  .detail-category {
+    @apply text-sm font-bold text-blue-600 uppercase tracking-wide bg-blue-50 px-3 py-1 rounded-full w-max;
+  }
+
+  .detail-title {
+    @apply text-4xl font-extrabold text-gray-900 leading-tight;
+  }
+
+  .detail-price {
+    @apply text-4xl font-bold text-green-600;
+  }
+
+  .detail-description {
+    @apply text-lg text-gray-600 leading-relaxed border-t border-b border-gray-100 py-6;
+  }
+
+  .detail-stock {
+    @apply flex items-center gap-2 text-sm font-medium text-gray-500;
+  }
+
+  .btn-whatsapp {
+    @apply w-full bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-6 rounded-xl shadow-lg shadow-green-500/30 transition-all transform hover:-translate-y-1 flex items-center justify-center gap-3 text-lg;
+  }
+
+  /* =========================================
+   LAYOUT MERCADO LIBRE (SIDEBAR) 🛍️
+   ========================================= */
+
+  .home-container {
+    @apply max-w-7xl mx-auto px-4 py-8 flex flex-col md:flex-row gap-8;
+  }
+
+  /* Sidebar de Filtros (Izquierda) */
+  .filters-sidebar {
+    @apply w-full md:w-64 flex-shrink-0;
+  }
+
+  .filter-section {
+    @apply mb-8 border-b border-gray-200 pb-6;
+  }
+
+  .filter-title {
+    @apply text-lg font-bold text-gray-900 mb-4;
+  }
+
+  .filter-list {
+    @apply space-y-2;
+  }
+
+  .filter-item {
+    @apply cursor-pointer text-gray-600 hover:text-blue-600 transition-colors text-sm flex items-center justify-between;
+  }
+
+  .filter-item.active {
+    @apply font-bold text-blue-600;
+  }
+
+  .filter-count {
+    @apply text-xs text-gray-400 ml-2;
+  }
+
+  /* Grilla de Productos (Derecha) */
+  .products-grid-container {
+    @apply flex-1;
+  }
+
+  /* Buscador Principal (Arriba) */
+  .main-search-wrapper {
+    @apply bg-yellow-400 py-4 shadow-sm mb-6;
+    /* El clásico amarillo o tu color */
+  }
+
+  .main-search-input {
+    @apply w-full max-w-3xl mx-auto block px-4 py-2 rounded shadow-sm border-none focus:ring-0 text-gray-800;
   }
 }

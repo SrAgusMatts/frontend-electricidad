@@ -1,5 +1,6 @@
 import React from 'react';
 import { Producto } from '@/services/api';
+import Link from "next/link";
 
 interface ProductProps {
   producto: Producto;
@@ -33,9 +34,9 @@ export default function ProductCard({ producto }: ProductProps) {
           <span className="text-price">
             ${producto.precio.toLocaleString()}
           </span>
-          <button className="btn-primary">
+          <Link href={`/productos/${producto.id}`} className="btn-primary">
             Ver más
-          </button>
+          </Link>
         </div>
       </div>
     </div>

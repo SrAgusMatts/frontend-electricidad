@@ -209,7 +209,7 @@ export default function EditarProductoPage() {
           </div>
 
           <div className="form-actions">
-            <button type="submit" disabled={guardando} className="btn-save">
+            <button type="submit" disabled={guardando} className="btn-form-submit">
               {guardando ? "Guardando..." : "Guardar Cambios"}
             </button>
 

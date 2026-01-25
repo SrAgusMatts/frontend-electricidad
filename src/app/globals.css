@@ -4,20 +4,28 @@
 
 @layer components {
 
+  /* =========================================
+     LAYOUT GENERAL Y UTILIDADES 📐
+     ========================================= */
+  
+  .page-wrapper {
+    @apply min-h-screen bg-gray-100 flex flex-col font-sans;
+  }
+
   .card {
-    @apply bg-white rounded-lg shadow-md overflow-hidden flex flex-col h-full transition-shadow duration-300;
+    @apply bg-white rounded-lg shadow-md overflow-hidden flex flex-col h-full transition-shadow duration-300 cursor-pointer border border-gray-100;
   }
 
   .card:hover {
-    @apply shadow-xl;
+    @apply shadow-xl border-blue-100;
   }
 
   .card-image-container {
-    @apply relative h-48 w-full bg-gray-200 flex items-center justify-center overflow-hidden;
+    @apply relative h-48 w-full bg-white flex items-center justify-center overflow-hidden border-b border-gray-50 p-4;
   }
 
   .card-image {
-    @apply object-cover w-full h-full transition-transform duration-300;
+    @apply object-contain w-full h-full transition-transform duration-300;
   }
 
   .card:hover .card-image {
@@ -28,24 +36,242 @@
     @apply p-4 flex flex-col flex-grow;
   }
 
-  .text-title-card {
-    @apply text-xl font-semibold text-gray-800 line-clamp-1;
+  .card-brand {
+    @apply text-[10px] text-gray-400 uppercase font-bold tracking-wider mb-1;
   }
 
-  .text-desc-card {
-    @apply text-gray-600 text-sm mt-1 line-clamp-2 flex-grow;
+  .text-title-card {
+    @apply text-sm font-medium text-gray-800 line-clamp-2 h-10 mb-1 leading-snug;
+  }
+
+  .card-footer {
+    @apply mt-auto pt-3 border-t border-gray-50;
   }
 
   .text-price {
-    @apply text-2xl font-bold text-green-600;
+    @apply text-xl font-light text-gray-900 block mb-3;
   }
 
   .btn-primary {
-    @apply bg-blue-600 text-white px-4 py-2 rounded transition-colors duration-300;
+    @apply bg-blue-600 text-white px-4 py-2 rounded text-sm font-semibold transition-colors duration-300 hover:bg-blue-700 block w-full text-center;
   }
 
-  .btn-primary:hover {
-    @apply bg-blue-700;
+  .btn-primary-outline {
+    @apply border border-blue-600 text-blue-600 px-4 py-2 rounded text-sm font-semibold transition-colors duration-300 hover:bg-blue-50 block w-full text-center;
+  }
+
+  /* =========================================
+     HOME PAGE (BUSCADOR, HERO Y LAYOUT) 🏠
+     ========================================= */
+
+  /* HERO (BANNER PRINCIPAL) 🦸‍♂️ */
+  .hero-wrapper {
+    @apply relative bg-slate-900 text-white overflow-hidden mb-0;
+  }
+
+  .hero-decoration {
+    @apply absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-blue-900/50 to-transparent skew-x-12 pointer-events-none;
+  }
+
+  .hero-container {
+    @apply max-w-7xl mx-auto px-4 py-16 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-8;
+  }
+
+  .hero-content {
+    @apply z-10 flex-1 text-center md:text-left;
+  }
+
+  .hero-title {
+    @apply text-4xl md:text-5xl font-extrabold tracking-tight mb-4 leading-tight;
+  }
+
+  .hero-highlight {
+    @apply text-yellow-400;
+  }
+
+  .hero-desc {
+    @apply text-lg text-gray-300 mb-8 max-w-lg mx-auto md:mx-0;
+  }
+
+  .hero-btn {
+    @apply inline-block bg-yellow-500 text-slate-900 font-bold py-3 px-8 rounded-full shadow-lg hover:bg-yellow-400 hover:shadow-yellow-500/30 transition-all transform hover:-translate-y-1;
+  }
+
+  .hero-image-wrapper {
+    @apply hidden md:flex flex-1 justify-center items-center;
+  }
+
+  .hero-icon-box {
+    @apply w-64 h-64 bg-yellow-400/10 rounded-full flex items-center justify-center border-4 border-yellow-400/20 shadow-[0_0_50px_rgba(250,204,21,0.2)];
+  }
+
+  .hero-icon {
+    @apply text-6xl;
+  }
+
+  .sticky-search-bar {
+    @apply bg-white shadow-sm border-b border-gray-200 py-4 sticky top-16 z-30;
+  }
+
+  .search-container-inner {
+    @apply max-w-7xl mx-auto px-4 flex items-center gap-4;
+  }
+
+  .search-input-wrapper {
+    @apply relative flex-1;
+  }
+
+  .search-input-field {
+    @apply w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none shadow-sm text-gray-800 placeholder-gray-400;
+  }
+
+  .search-icon-glass {
+    @apply absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg pointer-events-none;
+  }
+
+  .home-layout {
+    @apply max-w-7xl mx-auto px-4 py-8 flex flex-col md:flex-row gap-8 flex-grow w-full;
+  }
+
+  /* Sidebar Filtros */
+  .filters-sidebar {
+    @apply w-full md:w-64 flex-shrink-0 hidden md:block;
+  }
+
+  .filters-header {
+    @apply text-xl font-bold text-gray-800 mb-6;
+  }
+
+  .active-filters-chips {
+    @apply mb-6 flex flex-wrap gap-2;
+  }
+
+  .chip-brand {
+    @apply flex items-center gap-1 text-xs bg-blue-100 text-blue-700 px-3 py-1 rounded-full hover:bg-blue-200 font-semibold transition-colors;
+  }
+
+  .chip-clear {
+    @apply flex items-center gap-1 text-xs bg-gray-200 text-gray-700 px-3 py-1 rounded-full hover:bg-gray-300 font-semibold transition-colors;
+  }
+
+  .filter-section {
+    @apply mb-8 border-b border-gray-200 pb-6;
+  }
+
+  .filter-title {
+    @apply text-lg font-bold text-gray-900 mb-4;
+  }
+
+  .filter-list {
+    @apply space-y-2;
+  }
+
+  .filter-item {
+    @apply cursor-pointer text-gray-600 hover:text-blue-600 transition-colors text-sm flex items-center justify-between py-1;
+  }
+
+  .filter-item.active {
+    @apply font-bold text-blue-600 bg-blue-50 px-2 rounded-md -mx-2;
+  }
+
+  .filter-count {
+    @apply text-xs text-gray-400 ml-2;
+  }
+
+  .filter-empty {
+    @apply text-xs text-gray-400 italic;
+  }
+
+  /* Grilla de Resultados */
+  .products-area {
+    @apply flex-1;
+  }
+
+  .results-count {
+    @apply mb-4 text-sm text-gray-500;
+  }
+
+  .products-grid {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6;
+  }
+
+  .loading-container {
+    @apply flex justify-center items-center h-64;
+  }
+
+  .loading-spinner {
+    @apply animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600;
+  }
+
+  .empty-state-box {
+    @apply bg-white p-12 text-center rounded-lg shadow-sm border border-gray-100 flex flex-col items-center justify-center;
+  }
+
+  .empty-state-icon {
+    @apply text-4xl mb-4;
+  }
+
+  .empty-state-title {
+    @apply text-lg font-medium text-gray-900;
+  }
+
+  .empty-state-desc {
+    @apply text-gray-500 mt-2 mb-6;
+  }
+
+  .btn-clear-filters {
+    @apply text-blue-600 font-semibold hover:underline cursor-pointer;
+  }
+
+  /* =========================================
+     FOOTER (PIE DE PÁGINA) 🦶
+     ========================================= */
+  .footer-wrapper {
+    @apply bg-slate-900 text-gray-400 py-12 border-t border-slate-800 mt-auto;
+  }
+
+  .footer-container {
+    @apply max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8;
+  }
+
+  .footer-col {
+    @apply flex flex-col gap-4;
+  }
+
+  .footer-brand {
+    @apply text-2xl font-bold text-white flex items-center gap-2;
+  }
+
+  .footer-text {
+    @apply text-sm leading-relaxed;
+  }
+
+  .footer-title {
+    @apply text-white text-lg font-bold mb-2 uppercase tracking-wider;
+  }
+
+  .footer-list {
+    @apply space-y-2;
+  }
+
+  .footer-link {
+    @apply hover:text-yellow-400 transition-colors cursor-pointer text-sm block;
+  }
+
+  .footer-contact-list {
+    @apply space-y-3;
+  }
+
+  .footer-contact-item {
+    @apply flex items-center gap-2 text-sm;
+  }
+
+  .footer-icon {
+    @apply text-yellow-400 text-lg flex-shrink-0;
+  }
+
+  .footer-copyright {
+    @apply text-center text-xs text-gray-600 mt-12 pt-8 border-t border-slate-800;
   }
 
   /* =========================================
@@ -230,102 +456,6 @@
 
   .btn-panel-create {
     @apply bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-md hover:shadow-lg flex items-center gap-2 transform hover:-translate-y-0.5 whitespace-nowrap;
-  }
-
-  /* =========================================
-     DETALLE DEL PRODUCTO 🛍️
-     ========================================= */
-
-  .product-detail-container {
-    @apply max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8;
-  }
-
-  .product-grid {
-    @apply grid grid-cols-1 md:grid-cols-2 gap-12 items-start;
-  }
-
-  .detail-image-wrapper {
-    @apply relative bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200;
-  }
-
-  .detail-image {
-    @apply w-full h-auto object-cover transform hover:scale-105 transition-transform duration-500;
-  }
-
-  .detail-info {
-    @apply flex flex-col space-y-6;
-  }
-
-  .detail-category {
-    @apply text-sm font-bold text-blue-600 uppercase tracking-wide bg-blue-50 px-3 py-1 rounded-full w-max;
-  }
-
-  .detail-title {
-    @apply text-4xl font-extrabold text-gray-900 leading-tight;
-  }
-
-  .detail-price {
-    @apply text-4xl font-bold text-green-600;
-  }
-
-  .detail-description {
-    @apply text-lg text-gray-600 leading-relaxed border-t border-b border-gray-100 py-6;
-  }
-
-  .detail-stock {
-    @apply flex items-center gap-2 text-sm font-medium text-gray-500;
-  }
-
-  .btn-whatsapp {
-    @apply w-full bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-6 rounded-xl shadow-lg shadow-green-500/30 transition-all transform hover:-translate-y-1 flex items-center justify-center gap-3 text-lg;
-  }
-
-  /* =========================================
-     LAYOUT MERCADO LIBRE (SIDEBAR) 🛍️
-     ========================================= */
-
-  .home-container {
-    @apply max-w-7xl mx-auto px-4 py-8 flex flex-col md:flex-row gap-8;
-  }
-
-  .filters-sidebar {
-    @apply w-full md:w-64 flex-shrink-0;
-  }
-
-  .filter-section {
-    @apply mb-8 border-b border-gray-200 pb-6;
-  }
-
-  .filter-title {
-    @apply text-lg font-bold text-gray-900 mb-4;
-  }
-
-  .filter-list {
-    @apply space-y-2;
-  }
-
-  .filter-item {
-    @apply cursor-pointer text-gray-600 hover:text-blue-600 transition-colors text-sm flex items-center justify-between;
-  }
-
-  .filter-item.active {
-    @apply font-bold text-blue-600;
-  }
-
-  .filter-count {
-    @apply text-xs text-gray-400 ml-2;
-  }
-
-  .products-grid-container {
-    @apply flex-1;
-  }
-
-  .main-search-wrapper {
-    @apply bg-yellow-400 py-4 shadow-sm mb-6;
-  }
-
-  .main-search-input {
-    @apply w-full max-w-3xl mx-auto block px-4 py-2 rounded shadow-sm border-none focus:ring-0 text-gray-800;
   }
 
   /* =========================================

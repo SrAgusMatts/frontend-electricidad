@@ -2,7 +2,8 @@ import {
     Producto, 
     Marca, 
     PedidoCreateDto, 
-    PedidoResponse 
+    PedidoResponse, 
+    Pedido
 } from "@/types";
 
 const PUERTO = 7081;
@@ -140,3 +141,31 @@ export const crearPedido = async (pedido: PedidoCreateDto): Promise<PedidoRespon
 
     return await res.json();
 };
+
+export async function obtenerPedido(): Promise<Pedido[]> {
+  ignoreSSL();
+  const res = await fetch(`${API_URL}/Pedidos`);
+  
+  if (!res.ok) {
+    throw new Error("Error al cargar pedidos");
+  }
+  
+  return await res.json();
+}
+
+export async function obtenerPedidoPorId(id: number): Promise<Pedido> {
+    ignoreSSL();
+    const res = await fetch(`${API_URL}/Pedidos/${id}`);
+    if (!res.ok) throw new Error("Pedido no encontrado");
+    return await res.json();
+}
+
+export async function actualizarEstadoPedido(id: number, nuevoEstado: string): Promise<void> {
+    ignoreSSL();
+    const res = await fetch(`${API_URL}/Pedidos/${id}/estado`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(nuevoEstado) // Enviamos el string directo
+    });
+    if (!res.ok) throw new Error("Error al actualizar estado");
+}

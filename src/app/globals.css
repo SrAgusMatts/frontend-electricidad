@@ -16,7 +16,7 @@
     @apply flex-grow;
   }
 
-  /* --- TARJETAS --- */
+  /* --- TARJETAS (ProductCard) --- */
   .card {
     @apply bg-white rounded-lg shadow-md overflow-hidden flex flex-col h-full transition-shadow duration-300 cursor-pointer border border-gray-100;
   }
@@ -102,7 +102,7 @@
     @apply hover:text-yellow-400 px-3 py-2 rounded-md text-sm font-medium transition-colors;
   }
 
-  /* --- CARRITO ICONO --- */
+  /* Carrito Icono */
   .nav-cart-link {
     @apply relative p-2 cursor-pointer;
   }
@@ -123,7 +123,7 @@
     @apply h-8 w-px bg-slate-700 mx-6;
   }
 
-  /* --- USUARIO --- */
+  /* Usuario */
   .nav-user-tools {
     @apply flex items-center gap-2;
   }
@@ -141,11 +141,7 @@
   }
 
   .nav-btn-login {
-    @apply bg-yellow-500 text-slate-900 hover:bg-yellow-400 px-4 py-2 rounded-md text-sm font-bold transition-all shadow-lg shadow-yellow-500/20 inline-block cursor-pointer;
-  }
-
-  .nav-btn-login:hover {
-    @apply transform -translate-y-0.5;
+    @apply bg-yellow-500 text-slate-900 hover:bg-yellow-400 px-4 py-2 rounded-md text-sm font-bold transition-all transform hover:-translate-y-0.5 shadow-lg shadow-yellow-500/20 inline-block cursor-pointer;
   }
 
   .nav-link-register {
@@ -160,7 +156,7 @@
     @apply transform -translate-y-0.5 shadow-emerald-500/20;
   }
 
-  /* --- MENU MÓVIL --- */
+  /* Menú Móvil */
   .nav-mobile-wrapper {
     @apply -mr-2 flex md:hidden items-center gap-4;
   }
@@ -194,7 +190,7 @@
   }
 
   /* =========================================
-     HOME PAGE (HERO Y FILTROS) 🏠
+     HOME PAGE 🏠
      ========================================= */
 
   .hero-wrapper {
@@ -357,7 +353,7 @@
   }
 
   /* =========================================
-     FOOTER (PIE DE PÁGINA) 🦶
+     FOOTER 🦶
      ========================================= */
   .footer-wrapper {
     @apply bg-slate-900 text-gray-400 py-12 border-t border-slate-800 mt-auto;
@@ -529,7 +525,6 @@
     @apply bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-md hover:shadow-lg flex items-center gap-2 transform hover:-translate-y-0.5 whitespace-nowrap;
   }
 
-  /* Combobox */
   .combo-container {
     @apply relative w-full;
   }
@@ -562,7 +557,6 @@
     @apply w-full text-left px-4 py-3 text-sm font-bold text-blue-600 hover:bg-blue-50 cursor-pointer border-t border-gray-100 flex items-center gap-2 transition-colors;
   }
 
-  /* Admin Forms */
   .admin-wrapper {
     @apply min-h-screen bg-gray-50;
   }
@@ -701,5 +695,324 @@
 
   .btn-whatsapp-outline {
     @apply flex-1 bg-white border-2 border-green-500 text-green-600 font-bold py-4 px-6 rounded-xl hover:bg-green-50 transition-all flex items-center justify-center gap-3 text-lg;
+  }
+
+  /* =========================================
+     ADMIN PEDIDOS (NUEVO) 📦
+     ========================================= */
+  .admin-main-container {
+    @apply max-w-7xl mx-auto py-10 px-4 w-full;
+  }
+
+  .orders-header {
+    @apply flex items-center gap-4 mb-8;
+  }
+
+  .btn-back {
+    @apply text-gray-500 hover:text-blue-600 transition-colors;
+  }
+
+  .page-title {
+    @apply text-3xl font-bold text-gray-900;
+  }
+
+  .page-subtitle {
+    @apply text-sm text-gray-500;
+  }
+
+  .loading-cell-content {
+    @apply flex flex-col items-center justify-center gap-2;
+  }
+
+  .empty-cell {
+    @apply p-12 text-center text-gray-500 italic bg-gray-50;
+  }
+
+  /* Celdas Específicas */
+  .cell-id {
+    @apply font-mono text-gray-500;
+  }
+
+  .date-wrapper {
+    @apply flex flex-col text-xs;
+  }
+
+  .date-day {
+    @apply font-bold text-gray-700 flex items-center gap-1;
+  }
+
+  .date-time {
+    @apply text-gray-400 ml-4;
+  }
+
+  .cell-client {
+    @apply font-medium text-gray-800;
+  }
+
+  .cell-total {
+    @apply text-emerald-600 font-bold text-base flex items-center justify-end gap-1;
+  }
+
+  /* Badges de Estado */
+  .badge-base {
+    @apply px-2 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wide border;
+  }
+
+  .badge-pending {
+    @apply bg-yellow-100 text-yellow-700 border-yellow-200;
+  }
+
+  .badge-completed {
+    @apply bg-green-100 text-green-700 border-green-200;
+  }
+
+  /* Tooltip Interactivo */
+  .btn-view-details {
+    @apply text-blue-600 hover:bg-blue-100 p-2 rounded-full transition-colors cursor-help;
+  }
+
+  .tooltip-container {
+    @apply absolute right-10 top-1/2 -translate-y-1/2 w-72 bg-white shadow-2xl rounded-xl border border-gray-200 p-4 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all z-50 text-left;
+  }
+
+  .tooltip-header {
+    @apply text-xs font-bold text-gray-400 uppercase border-b border-gray-100 pb-2 mb-2;
+  }
+
+  .tooltip-list {
+    @apply space-y-2 max-h-48 overflow-y-auto;
+  }
+
+  .tooltip-item {
+    @apply text-sm flex justify-between items-start border-b border-dashed border-gray-100 pb-1 last:border-0;
+  }
+
+  .tooltip-item-name {
+    @apply text-gray-600 font-medium;
+  }
+
+  .tooltip-item-qty {
+    @apply text-blue-600 font-bold;
+  }
+
+  .tooltip-item-price {
+    @apply text-gray-400 text-xs ml-2 mt-0.5;
+  }
+
+  .tooltip-footer {
+    @apply mt-3 pt-2 border-t border-gray-100 text-right;
+  }
+
+  /* =========================================
+     DETALLE PEDIDO ADMIN (NUEVO) 📋
+     ========================================= */
+
+  .detail-page-container {
+    @apply max-w-5xl mx-auto py-10 px-4 w-full;
+  }
+
+  .detail-header-wrapper {
+    @apply flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8;
+  }
+
+  .detail-title-group {
+    @apply flex items-center gap-4;
+  }
+
+  .detail-main-title {
+    @apply text-3xl font-bold text-gray-900 flex items-center gap-3;
+  }
+
+  .detail-date-sub {
+    @apply text-gray-500 text-sm mt-1;
+  }
+
+  .detail-actions-group {
+    @apply flex gap-3;
+  }
+
+  .btn-print {
+    @apply px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 font-bold hover:bg-gray-50 flex items-center gap-2 transition-colors cursor-pointer;
+  }
+
+  .btn-confirm-order {
+    @apply px-4 py-2 bg-green-600 text-white rounded-lg font-bold hover:bg-green-700 flex items-center gap-2 disabled:opacity-50 transition-colors shadow-md hover:shadow-lg cursor-pointer;
+  }
+
+  .detail-content-grid {
+    @apply grid grid-cols-1 md:grid-cols-3 gap-8;
+  }
+
+  .detail-section-left {
+    @apply md:col-span-2 space-y-6;
+  }
+
+  .detail-card {
+    @apply bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden;
+  }
+
+  .detail-card-header {
+    @apply bg-gray-50 px-6 py-4 border-b border-gray-200 font-bold text-gray-700;
+  }
+
+  .detail-card-body {
+    @apply p-6;
+  }
+
+  /* Tabla interna de productos */
+  .products-table-header {
+    @apply border-b border-gray-100;
+  }
+
+  .products-th {
+    @apply px-6 py-3 text-xs font-semibold text-gray-500 uppercase;
+  }
+
+  .products-td-name {
+    @apply px-6 py-4 text-gray-800 font-medium;
+  }
+
+  .products-td-center {
+    @apply px-6 py-4 text-center text-gray-600;
+  }
+
+  .products-td-right {
+    @apply px-6 py-4 text-right font-bold text-gray-800;
+  }
+
+  .products-tfoot {
+    @apply bg-gray-50;
+  }
+
+  .products-total-label {
+    @apply px-6 py-4 text-right font-bold text-gray-500;
+  }
+
+  .products-total-value {
+    @apply px-6 py-4 text-right font-extrabold text-xl text-emerald-600;
+  }
+
+  /* Datos del Cliente */
+  .client-data-row {
+    @apply flex items-start gap-3;
+  }
+
+  .client-data-label {
+    @apply text-xs text-gray-400 uppercase;
+  }
+
+  .client-data-value {
+    @apply font-medium text-gray-800;
+  }
+
+  /* =========================================
+     ESTILOS DE IMPRESIÓN (FACTURA) 🖨️
+     ========================================= */
+
+  .printable-invoice {
+    display: none;
+    /* Oculto en pantalla normal */
+  }
+
+  @media print {
+
+    /* Ocultamos TODO lo que tenga la clase no-print */
+    .no-print,
+    .no-print * {
+      display: none !important;
+    }
+
+    /* Ocultamos elementos flotantes del navegador o nextjs */
+    body {
+      background: white;
+    }
+
+    /* Mostramos la factura */
+    .printable-invoice {
+      display: block !important;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: white;
+      color: black;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 12px;
+      z-index: 9999;
+    }
+
+    /* ... (El resto de estilos de la factura que te pasé antes se mantienen igual) ... */
+    .invoice-box {
+      border: 1px solid #000;
+      padding: 10px;
+      margin-bottom: 5px;
+    }
+
+    .invoice-header-grid {
+      display: grid;
+      grid-template-columns: 40% 20% 40%;
+      border: 1px solid #000;
+      margin-bottom: 10px;
+    }
+
+    .invoice-col-left {
+      padding: 10px;
+      border-right: 1px solid #000;
+    }
+
+    .invoice-col-center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      border-right: 1px solid #000;
+      font-weight: bold;
+      font-size: 20px;
+    }
+
+    .invoice-letter-box {
+      width: 40px;
+      height: 40px;
+      border: 1px solid #000;
+      background: #eee;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin-bottom: 5px;
+      margin-top: -1px;
+    }
+
+    .invoice-col-right {
+      padding: 10px;
+    }
+
+    .invoice-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-size: 11px;
+    }
+
+    .invoice-table th {
+      border: 1px solid #000;
+      padding: 4px;
+      background-color: #f0f0f0;
+      text-transform: uppercase;
+    }
+
+    .invoice-table td {
+      border: 1px solid #000;
+      padding: 4px;
+    }
+
+    .invoice-footer {
+      margin-top: 20px;
+      border: 1px solid #000;
+      padding: 5px;
+      display: flex;
+      justify-content: flex-end;
+    }
   }
 }

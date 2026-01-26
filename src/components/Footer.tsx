@@ -40,9 +40,7 @@ export default function Footer() {
             </li>
             <li className="footer-contact-item">
               <HiMail className="footer-icon" />
-              <span>agustigmmattos06@gmail.com</span>
-              <HiMail className="footer-icon" />
-              <span>gustavofabianmattos@gmail.com</span>
+              <span>ventas.electricidadmattos@gmail.com</span>
             </li>
           </ul>
         </div>

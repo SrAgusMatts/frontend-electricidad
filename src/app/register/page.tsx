@@ -9,7 +9,7 @@ import Toast from "@/components/Toast";
 
 export default function RegisterPage() {
     const [toast, setToast] = useState({ show: false, message: "", type: "success" as "success" | "error" });
-    
+
     const mostrarNotificacion = (message: string, type: "success" | "error") => {
         setToast({ show: true, message, type });
     };
@@ -30,13 +30,15 @@ export default function RegisterPage() {
             });
 
             mostrarNotificacion(`¡Bienvenido, ${nombre}!`, "success");
-            
+
             setTimeout(() => {
                 router.push("/login");
             }, 1500);
 
         } catch (error: any) {
-            mostrarNotificacion("Error: " + (error.message || "Intentá de nuevo."), "error");
+            // Manejamos el error asegurando que sea un string
+            const errorMsg = error.message || "Ocurrió un error al registrarse.";
+            mostrarNotificacion("Error: " + errorMsg, "error");
         }
     };
 
@@ -48,7 +50,7 @@ export default function RegisterPage() {
                 type={toast.type}
                 onClose={() => setToast({ ...toast, show: false })}
             />
-            
+
             <div className="glass-card">
 
                 <div className="glass-icon-wrapper">

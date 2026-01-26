@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useRef } from "react";
 import { HiChevronDown, HiCheck, HiPlus } from "react-icons/hi";
-import { Marca, crearMarca } from "@/services/api";
+import { crearMarca } from "@/services/api";
+import { Marca } from "@/types";
 
 interface Props {
     marcas: Marca[];

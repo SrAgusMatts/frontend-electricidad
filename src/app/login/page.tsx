@@ -2,15 +2,17 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation"; // Volvemos a usar router
 import { HiUser, HiLockClosed } from "react-icons/hi";
 import { loginUsuario } from "@/services/api";
 import Toast from "@/components/Toast";
+import { useAuth } from "@/context/AuthContext"; // 👇 Importamos el hook
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
+  const { login } = useAuth(); // 👇 Usamos la función del contexto
 
   const [toast, setToast] = useState({ show: false, message: "", type: "success" as "success" | "error" });
 
@@ -22,14 +24,17 @@ export default function LoginPage() {
     e.preventDefault();
 
     try {
-      const usuario = await loginUsuario({ email, password });
+      const usuarioApi = await loginUsuario({ email, password });
 
-      mostrarNotificacion(`¡Bienvenido, ${usuario.nombre}!`, "success");
+      mostrarNotificacion(`¡Bienvenido, ${usuarioApi.nombre}!`, "success");
 
-      localStorage.setItem("usuarioMattos", JSON.stringify(usuario));
+      // 👇 ACÁ ESTÁ LA MAGIA:
+      // En vez de guardar a mano en localStorage, usamos la función login del contexto.
+      // Esto actualiza el estado global y el Navbar se entera al instante.
+      login(usuarioApi);
 
       setTimeout(() => {
-        router.push("/");
+        router.push("/"); // 👇 Navegación suave (sin flash)
       }, 1500);
 
     } catch (error) {
@@ -37,6 +42,7 @@ export default function LoginPage() {
     }
   };
 
+  // ... (El resto del return sigue igual que antes)
   return (
     <div className="login-bg">
       <Toast
@@ -45,7 +51,7 @@ export default function LoginPage() {
         type={toast.type}
         onClose={() => setToast({ ...toast, show: false })}
       />
-
+      {/* ... resto del JSX ... */}
       <div className="glass-card">
         <div className="glass-icon-wrapper">
           <div className="glass-icon-circle">

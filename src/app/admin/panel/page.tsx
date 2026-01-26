@@ -4,8 +4,9 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Toast from "@/components/Toast";
-import { obtenerProductos, eliminarProducto, Producto } from "@/services/api";
+import { obtenerProductos, eliminarProducto } from "@/services/api";
 import { HiSearch, HiPencil, HiTrash, HiPlus } from "react-icons/hi";
+import { Producto } from "@/types";
 
 export default function AdminPanelPage() {
     const [productos, setProductos] = useState<Producto[]>([]);

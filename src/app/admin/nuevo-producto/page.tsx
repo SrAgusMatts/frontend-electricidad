@@ -2,12 +2,13 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { crearProducto, obtenerMarcas, Marca } from "@/services/api";
+import { crearProducto, obtenerMarcas } from "@/services/api";
 import Navbar from "@/components/Navbar";
 import Toast from "@/components/Toast";
 import { HiSave, HiArrowLeft, HiPhotograph } from "react-icons/hi";
 import SelectorMarca from "@/components/SelectorMarca";
 import Link from "next/link";
+import { Marca } from "@/types";
 
 export default function NuevoProductoPage() {
     const router = useRouter();

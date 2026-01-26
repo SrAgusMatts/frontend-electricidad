@@ -1,6 +1,6 @@
 import React from 'react';
-import { Producto } from '@/services/api';
 import Link from "next/link";
+import { Producto } from '@/types';
 
 interface ProductProps {
   producto: Producto;

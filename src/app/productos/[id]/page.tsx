@@ -3,9 +3,10 @@
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { obtenerProductoPorId, obtenerProductos, Producto } from "@/services/api";
+import { obtenerProductoPorId, obtenerProductos } from "@/services/api";
 import Navbar from "@/components/Navbar";
 import { HiCheckCircle, HiXCircle } from "react-icons/hi";
+import { Producto } from "@/types";
 
 // Icono de WhatsApp
 const WhatsAppIcon = () => (

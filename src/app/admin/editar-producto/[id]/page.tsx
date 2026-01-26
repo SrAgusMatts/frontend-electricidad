@@ -7,9 +7,9 @@ import {
   obtenerProductoPorId,
   actualizarProducto,
   obtenerMarcas,
-  Marca
 } from "@/services/api";
 import SelectorMarca from "@/components/SelectorMarca";
+import { Marca } from "@/types";
 
 export default function EditarProductoPage() {
   const router = useRouter();
@@ -48,7 +48,7 @@ export default function EditarProductoPage() {
         setDescripcion(producto.descripcion);
         setPrecio(producto.precio.toString());
         setStock(producto.stock.toString());
-        setCategoriaId(producto.categoriaId);
+        setCategoriaId(producto.categoriaId || 1);
         setImagenActual(producto.imagenUrl);
 
         if (producto.marca) {

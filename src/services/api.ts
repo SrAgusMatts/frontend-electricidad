@@ -1,65 +1,84 @@
-
-const API_URL = "https://localhost:7081/api";
-
-export interface Producto {
-    id: number;
-    nombre: string;
-    descripcion: string;
-    precio: number;
-    imagenUrl: string;
-    stock: number;
-    categoriaId?: number;
-    categoria?: { nombre: string };
-    marca?: Marca;
-}
-
-export interface Marca {
-    id: number;
-    nombre: string;
-}
+import { 
+    Producto, 
+    Marca, 
+    PedidoCreateDto, 
+    PedidoResponse 
+} from "@/types";
 
 const PUERTO = 7081;
+const API_URL = `https://localhost:${PUERTO}/api`;
+
+const ignoreSSL = () => {
+    if (typeof process !== 'undefined' && process.env) {
+        process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+    }
+};
+
+// ==========================================
+// PRODUCTOS
+// ==========================================
 
 export async function obtenerProductos(): Promise<Producto[]> {
-    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-
+    ignoreSSL();
     try {
-        const res = await fetch(`${API_URL}/Productos`, {
-            cache: 'no-store'
-        });
-
-        if (!res.ok) {
-            throw new Error(`Error HTTP: ${res.status}`);
-        }
-
+        const res = await fetch(`${API_URL}/Productos`, { cache: 'no-store' });
+        if (!res.ok) throw new Error(`Error HTTP: ${res.status}`);
         return await res.json();
     } catch (error) {
-        console.error("Error en el servicio obtenerProductos:", error);
+        console.error("Error en obtenerProductos:", error);
         return [];
     }
 }
 
-export async function obtenerProductoPorId(id: number) {
-    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+export async function obtenerProductoPorId(id: number): Promise<Producto> {
+    ignoreSSL();
+    const res = await fetch(`${API_URL}/Productos/${id}`, { cache: 'no-store' });
+    if (!res.ok) throw new Error("Producto no encontrado");
+    return await res.json();
+}
 
-    try {
-        const res = await fetch(`https://localhost:${PUERTO}/api/Productos/${id}`, {
-            cache: 'no-store'
-        });
+export async function crearProducto(datos: FormData): Promise<Producto> {
+    ignoreSSL();
+    const res = await fetch(`${API_URL}/Productos`, {
+        method: 'POST',
+        body: datos, // FormData se encarga de los headers
+    });
 
-        if (!res.ok) throw new Error("Producto no encontrado");
-
-        return await res.json();
-    } catch (error) {
-        console.error("Error en el servicio obtenerProductos:", error);
-        return [];
+    if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(errorText || "Error al crear el producto");
     }
+    return await res.json();
+}
+
+export async function actualizarProducto(id: number, datos: FormData): Promise<void> {
+    ignoreSSL();
+    const res = await fetch(`${API_URL}/Productos/${id}`, {
+        method: 'PUT',
+        body: datos,
+    });
+    if (!res.ok) throw new Error("Error al actualizar");
+}
+
+export async function eliminarProducto(id: number): Promise<void> {
+    ignoreSSL();
+    await fetch(`${API_URL}/Productos/${id}`, { method: 'DELETE' });
+}
+
+// ==========================================
+// MARCAS
+// ==========================================
+
+export async function obtenerMarcas(): Promise<Marca[]> {
+    ignoreSSL();
+    const res = await fetch(`${API_URL}/Marcas`);
+    if (!res.ok) throw new Error("Error al cargar marcas");
+    return await res.json();
 }
 
 export async function crearMarca(nombre: string): Promise<Marca> {
-    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-
-    const res = await fetch(`https://localhost:${PUERTO}/api/Marcas`, {
+    ignoreSSL();
+    const res = await fetch(`${API_URL}/Marcas`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ nombre }),
@@ -69,104 +88,55 @@ export async function crearMarca(nombre: string): Promise<Marca> {
     return await res.json();
 }
 
-export async function obtenerMarcas(): Promise<Marca[]> {
-    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+// ==========================================
+// USUARIOS (Auth)
+// ==========================================
 
-    const res = await fetch(`https://localhost:${PUERTO}/api/Marcas`);
-    if (!res.ok) throw new Error("Error al cargar marcas");
+export async function registrarUsuario(datos: any) {
+    ignoreSSL();
+    const res = await fetch(`${API_URL}/Usuarios/registro`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(datos),
+    });
 
+    if (!res.ok) {
+        const mensajeError = await res.text();
+        throw new Error(mensajeError);
+    }
     return await res.json();
 }
 
-export async function registrarUsuario(datos: any) {
-    const API_URL = `https://localhost:${PUERTO}/api/Usuarios/registro`;
-
-    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-
-    try {
-        const res = await fetch(API_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(datos),
-        });
-
-        if (!res.ok) {
-            const mensajeError = await res.text();
-            throw new Error(mensajeError);
-        }
-
-        return await res.json();
-    } catch (error) {
-        throw error;
-    }
-}
-
 export async function loginUsuario(datos: any) {
-    const API_URL = `https://localhost:${PUERTO}/api/Usuarios/login`;
-
-    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-
-    try {
-        const res = await fetch(API_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(datos),
-        });
-
-        if (!res.ok) {
-            throw new Error("Correo o contraseña incorrectos");
-        }
-
-        return await res.json();
-    } catch (error) {
-        throw error;
-    }
-}
-
-export async function crearProducto(datos: FormData) {
-    const API_URL = `https://localhost:${PUERTO}/api/Productos`;
-
-    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-
-    try {
-        const res = await fetch(API_URL, {
-            method: 'POST',
-            body: datos,
-        });
-
-        if (!res.ok) {
-            const errorText = await res.text();
-            throw new Error(errorText || "Error al crear el producto");
-        }
-
-        return await res.json();
-    } catch (error) {
-        throw error;
-    }
-}
-
-export async function eliminarProducto(id: number) {
-    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-
-    await fetch(`https://localhost:${PUERTO}/api/Productos/${id}`, {
-        method: 'DELETE',
+    ignoreSSL();
+    const res = await fetch(`${API_URL}/Usuarios/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(datos),
     });
+
+    if (!res.ok) throw new Error("Correo o contraseña incorrectos");
+    return await res.json();
 }
 
-export async function actualizarProducto(id: number, producto: any) {
-    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+// ==========================================
+// PEDIDOS (NUEVO) 🛒
+// ==========================================
 
-    const res = await fetch(`https://localhost:${PUERTO}/api/Productos/${id}`, {
-        method: 'PUT',
+export const crearPedido = async (pedido: PedidoCreateDto): Promise<PedidoResponse> => {
+    ignoreSSL();
+    const res = await fetch(`${API_URL}/Pedidos`, {
+        method: "POST",
         headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
         },
-        body: JSON.stringify({ ...producto, id }),
+        body: JSON.stringify(pedido),
     });
 
-    if (!res.ok) throw new Error("Error al actualizar");
-}
+    if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(errorText || "Error al crear el pedido");
+    }
+
+    return await res.json();
+};

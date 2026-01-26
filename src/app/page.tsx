@@ -5,8 +5,9 @@ import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import Footer from "@/components/Footer";
-import { obtenerProductos, Producto } from "@/services/api";
+import { obtenerProductos } from "@/services/api";
 import { HiSearch, HiX } from "react-icons/hi";
+import { Producto } from "@/types";
 
 export default function Home() {
   const [productos, setProductos] = useState<Producto[]>([]);

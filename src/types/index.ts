@@ -16,17 +16,17 @@ export interface Producto {
     imagenUrl: string;
     categoriaId?: number;
     categoria?: { nombre: string };
-    
+
     // Relación con Marca
-    marca?: Marca; 
+    marca?: Marca;
     marcaId?: number;
 }
 
 // ==========================================
-// DTOs PEDIDOS (Carrito y Compras)
+// DTOs PEDIDOS (Carrito y Creación)
 // ==========================================
 
-// Un ítem individual dentro del carrito / orden
+// Un ítem individual para enviar al crear
 export interface DetallePedidoDto {
     productoId: number;
     cantidad: number;
@@ -48,10 +48,34 @@ export interface PedidoResponse {
 }
 
 // ==========================================
+// VISTA DE PEDIDOS (Panel Admin) - ¡NUEVO! 📦
+// ==========================================
+
+// El detalle de un pedido ya realizado (para ver)
+export interface DetallePedido {
+    productoId: number;
+    nombreProducto: string;
+    cantidad: number;
+    precioUnitario: number;
+    subtotal: number;
+}
+
+// El pedido completo que viene del Backend
+export interface Pedido {
+    id: number;
+    fecha: string;
+    estado: string;
+    nombreCliente: string;
+    telefono: string;
+    email: string;
+    total: number;
+    items: DetallePedido[];
+}
+
+// ==========================================
 // TIPOS DEL FRONTEND (Estado local)
 // ==========================================
 
-// El ítem como lo guardamos en el Contexto/LocalStorage
 export interface CartItem {
     producto: Producto;
     cantidad: number;

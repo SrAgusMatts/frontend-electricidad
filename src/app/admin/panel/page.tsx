@@ -53,6 +53,10 @@ export default function AdminPanelPage() {
 
                 <div className="flex justify-between items-center mb-8">
                     <h1 className="text-3xl font-bold text-gray-900">Panel de Control</h1>
+
+                    <Link href="/admin/pedidos" className="bg-blue-600 text-white px-4 py-2 rounded-lg font-bold shadow hover:bg-blue-700 transition flex items-center gap-2">
+                        📦 Ver Pedidos
+                    </Link>
                     <Link href="/admin/nuevo-producto" className="btn-panel-create">
                         <HiPlus className="text-xl" />
                         Nuevo Producto

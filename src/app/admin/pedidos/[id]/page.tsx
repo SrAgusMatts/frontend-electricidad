@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { HiArrowLeft, HiCheck, HiPrinter, HiUser, HiMail, HiPhone } from "react-icons/hi";
+import { HiArrowLeft, HiCheck, HiPrinter, HiUser, HiMail, HiPhone, HiExclamation } from "react-icons/hi"; // 👈 Importamos HiExclamation
 import Navbar from "@/components/Navbar";
 import Toast from "@/components/Toast";
 import { Pedido } from "@/types";
@@ -14,6 +14,10 @@ export default function DetallePedidoPage() {
     const [pedido, setPedido] = useState<Pedido | null>(null);
     const [loading, setLoading] = useState(true);
     const [procesando, setProcesando] = useState(false);
+
+    // 👇 ESTADO PARA EL MODAL
+    const [showModal, setShowModal] = useState(false);
+
     const [toast, setToast] = useState({ show: false, message: "", type: "success" as "success" | "error" });
 
     const pedidoId = params?.id ? Number(params.id) : 0;
@@ -33,17 +37,24 @@ export default function DetallePedidoPage() {
         }
     };
 
-    const handleConfirmar = async () => {
+    // 1. Botón "Confirmar Pedido" -> Abre el modal
+    const handleAbrirModal = () => {
+        setShowModal(true);
+    };
+
+    // 2. Botón "Confirmar" del Modal -> Ejecuta la acción
+    const ejecutarConfirmacion = async () => {
         if (!pedido) return;
-        if (!confirm("¿Marcar este pedido como COMPLETADO?")) return;
 
         setProcesando(true);
         try {
             await actualizarEstadoPedido(pedido.id, "Completado");
             setToast({ show: true, message: "Pedido actualizado a Completado", type: "success" });
             setPedido({ ...pedido, estado: "Completado" });
+            setShowModal(false); // Cierra modal al terminar
         } catch (error) {
-            setToast({ show: true, message: "Error al actualizar", type: "error" });
+            console.error(error);
+            setToast({ show: true, message: "Error al actualizar (Revisa el Backend)", type: "error" });
         } finally {
             setProcesando(false);
         }
@@ -58,7 +69,6 @@ export default function DetallePedidoPage() {
 
     return (
         <>
-            {/* VISTA NORMAL DE PANTALLA (Se oculta al imprimir con la clase no-print) */}
             <div className="page-wrapper no-print">
                 <Navbar />
                 <Toast show={toast.show} message={toast.message} type={toast.type} onClose={() => setToast({ ...toast, show: false })} />
@@ -86,8 +96,9 @@ export default function DetallePedidoPage() {
                             </button>
 
                             {pedido.estado === 'Pendiente' && (
-                                <button onClick={handleConfirmar} disabled={procesando} className="btn-confirm-order">
-                                    <HiCheck /> {procesando ? "Procesando..." : "Confirmar Pedido"}
+                                // 👇 Abre el modal en lugar de window.confirm
+                                <button onClick={handleAbrirModal} disabled={procesando} className="btn-confirm-order">
+                                    <HiCheck /> Confirmar Pedido
                                 </button>
                             )}
                         </div>
@@ -149,12 +160,46 @@ export default function DetallePedidoPage() {
                         </div>
                     </div>
                 </main>
+
+                {/* 👇 MODAL DE CONFIRMACIÓN 👇 */}
+                {showModal && (
+                    <div className="modal-overlay">
+                        <div className="modal-box animate-in fade-in zoom-in-95 duration-200">
+                            <div className="modal-header">
+                                <div className="modal-icon-wrapper">
+                                    <HiExclamation className="text-2xl" />
+                                </div>
+                                <h3 className="modal-title">Confirmar Acción</h3>
+                            </div>
+
+                            <p className="modal-desc">
+                                ¿Estás seguro de que deseas marcar el pedido <b>#{pedido.id}</b> como COMPLETADO?
+                                <br />Esta acción no se puede deshacer.
+                            </p>
+
+                            <div className="modal-actions">
+                                <button
+                                    onClick={() => setShowModal(false)}
+                                    className="btn-modal-cancel"
+                                    disabled={procesando}
+                                >
+                                    Cancelar
+                                </button>
+                                <button
+                                    onClick={ejecutarConfirmacion}
+                                    className="btn-modal-confirm"
+                                    disabled={procesando}
+                                >
+                                    {procesando ? "Procesando..." : "Confirmar"}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
 
-            {/* VISTA DE IMPRESIÓN (FACTURA) - Se muestra SOLO al imprimir */}
+            {/* VISTA DE IMPRESIÓN (FACTURA) */}
             <div className="printable-invoice">
-
-                {/* ENCABEZADO TIPO FACTURA */}
                 <div className="invoice-header-grid">
                     <div className="invoice-col-left">
                         <h2 className="text-xl font-bold uppercase">Electricidad Mattos</h2>
@@ -163,12 +208,10 @@ export default function DetallePedidoPage() {
                         <p className="text-xs">Tel: (3564) 123-456</p>
                         <p className="text-xs">IVA RESPONSABLE INSCRIPTO</p>
                     </div>
-
                     <div className="invoice-col-center">
                         <div className="invoice-letter-box">X</div>
                         <span className="text-[10px] text-center uppercase">Documento no válido como factura</span>
                     </div>
-
                     <div className="invoice-col-right text-right">
                         <h3 className="font-bold text-lg">NOTA DE PEDIDO</h3>
                         <p className="font-mono text-sm">Nº: {pedido.id.toString().padStart(8, '0')}</p>
@@ -177,8 +220,6 @@ export default function DetallePedidoPage() {
                         <p className="text-xs">Ing. Brutos: 904-123456</p>
                     </div>
                 </div>
-
-                {/* DATOS CLIENTE */}
                 <div className="invoice-box">
                     <table className="w-full text-xs">
                         <tbody>
@@ -187,28 +228,19 @@ export default function DetallePedidoPage() {
                                 <td className="uppercase">{pedido.nombreCliente}</td>
                             </tr>
                             <tr>
-                                <td className="font-bold">Domicilio:</td>
-                                <td>-</td>
+                                <td className="font-bold">Domicilio:</td><td>-</td>
                             </tr>
                             <tr>
-                                <td className="font-bold">Teléfono:</td>
-                                <td>{pedido.telefono || "-"}</td>
-                                <td className="font-bold text-right w-20">Cond. Venta:</td>
-                                <td className="text-right w-20">Contado</td>
+                                <td className="font-bold">Teléfono:</td><td>{pedido.telefono || "-"}</td>
+                                <td className="font-bold text-right w-20">Cond. Venta:</td><td className="text-right w-20">Contado</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-
-                {/* TABLA PRODUCTOS */}
                 <table className="invoice-table">
                     <thead>
                         <tr>
-                            <th className="w-16 text-center">COD</th>
-                            <th className="w-10 text-center">CANT</th>
-                            <th className="text-left">DETALLE / DESCRIPCIÓN</th>
-                            <th className="w-24 text-right">P. UNITARIO</th>
-                            <th className="w-24 text-right">IMPORTE</th>
+                            <th className="w-16 text-center">COD</th><th className="w-10 text-center">CANT</th><th className="text-left">DETALLE</th><th className="w-24 text-right">P. UNITARIO</th><th className="w-24 text-right">IMPORTE</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -221,38 +253,20 @@ export default function DetallePedidoPage() {
                                 <td className="text-right font-bold">$ {item.subtotal.toLocaleString("es-AR", { minimumFractionDigits: 2 })}</td>
                             </tr>
                         ))}
-
                         {[...Array(Math.max(0, 10 - pedido.items.length))].map((_, i) => (
-                            <tr key={`fill-${i}`}>
-                                <td className="text-center text-transparent">.</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
+                            <tr key={`fill-${i}`}><td className="text-center text-transparent">.</td><td></td><td></td><td></td><td></td></tr>
                         ))}
                     </tbody>
                 </table>
-
-                {/* TOTALES */}
                 <div className="invoice-footer">
                     <table className="w-64 text-right text-sm">
                         <tbody>
-                            <tr>
-                                <td className="pr-4 font-bold">SUBTOTAL:</td>
-                                <td>$ {pedido.total.toLocaleString("es-AR", { minimumFractionDigits: 2 })}</td>
-                            </tr>
-                            <tr>
-                                <td className="pr-4 font-bold text-xl border-t border-black mt-2 pt-2">TOTAL:</td>
-                                <td className="font-bold text-xl border-t border-black mt-2 pt-2">$ {pedido.total.toLocaleString("es-AR", { minimumFractionDigits: 2 })}</td>
-                            </tr>
+                            <tr><td className="pr-4 font-bold">SUBTOTAL:</td><td>$ {pedido.total.toLocaleString("es-AR", { minimumFractionDigits: 2 })}</td></tr>
+                            <tr><td className="pr-4 font-bold text-xl border-t border-black mt-2 pt-2">TOTAL:</td><td className="font-bold text-xl border-t border-black mt-2 pt-2">$ {pedido.total.toLocaleString("es-AR", { minimumFractionDigits: 2 })}</td></tr>
                         </tbody>
                     </table>
                 </div>
-
-                <div className="text-center text-[10px] mt-8 italic">
-                    Gracias por su compra - Electricidad Mattos
-                </div>
+                <div className="text-center text-[10px] mt-8 italic">Gracias por su compra - Electricidad Mattos</div>
             </div>
         </>
     );

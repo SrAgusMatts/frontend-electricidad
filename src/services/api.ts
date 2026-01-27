@@ -1,8 +1,8 @@
-import { 
-    Producto, 
-    Marca, 
-    PedidoCreateDto, 
-    PedidoResponse, 
+import {
+    Producto,
+    Marca,
+    PedidoCreateDto,
+    PedidoResponse,
     Pedido
 } from "@/types";
 
@@ -143,14 +143,14 @@ export const crearPedido = async (pedido: PedidoCreateDto): Promise<PedidoRespon
 };
 
 export async function obtenerPedido(): Promise<Pedido[]> {
-  ignoreSSL();
-  const res = await fetch(`${API_URL}/Pedidos`);
-  
-  if (!res.ok) {
-    throw new Error("Error al cargar pedidos");
-  }
-  
-  return await res.json();
+    ignoreSSL();
+    const res = await fetch(`${API_URL}/Pedidos`);
+
+    if (!res.ok) {
+        throw new Error("Error al cargar pedidos");
+    }
+
+    return await res.json();
 }
 
 export async function obtenerPedidoPorId(id: number): Promise<Pedido> {
@@ -165,7 +165,13 @@ export async function actualizarEstadoPedido(id: number, nuevoEstado: string): P
     const res = await fetch(`${API_URL}/Pedidos/${id}/estado`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(nuevoEstado) // Enviamos el string directo
+        // 👇 AHORA ENVIAMOS UN OBJETO JSON
+        body: JSON.stringify({ estado: nuevoEstado })
     });
-    if (!res.ok) throw new Error("Error al actualizar estado");
+
+    if (!res.ok) {
+        // Log para ver qué pasó si falla
+        console.error(await res.text());
+        throw new Error("Error al actualizar estado");
+    }
 }

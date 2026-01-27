@@ -6,17 +6,10 @@ import Link from "next/link";
 import { obtenerProductoPorId, obtenerProductos } from "@/services/api";
 import Navbar from "@/components/Navbar";
 import Toast from "@/components/Toast";
-import {
-  HiCheckCircle,
-  HiXCircle,
-  HiMinus,
-  HiPlus,
-  HiShieldCheck
-} from "react-icons/hi";
+import { HiCheckCircle, HiXCircle, HiX } from "react-icons/hi"; // 👈 Agregamos HiX
 import { Producto } from "@/types";
 import { useCarrito } from "@/context/CarritoContext";
 
-// Icono SVG simple para WhatsApp
 const WhatsAppIcon = () => (
   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
     <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
@@ -26,16 +19,21 @@ const WhatsAppIcon = () => (
 export default function ProductoDetallePage() {
   const params = useParams();
   const id = Number(params.id);
-  const { agregarItem } = useCarrito();
+  const { agregarItem, carrito } = useCarrito();
 
   const [producto, setProducto] = useState<Producto | null>(null);
   const [relacionados, setRelacionados] = useState<Producto[]>([]);
   const [loading, setLoading] = useState(true);
+
   const [cantidad, setCantidad] = useState(1);
+  const [inputVisible, setInputVisible] = useState(false);
+
   const [toast, setToast] = useState({ show: false, message: "", type: "success" as "success" | "error" });
 
   useEffect(() => {
     cargarDatos();
+    setInputVisible(false);
+    setCantidad(1);
   }, [id]);
 
   const cargarDatos = async () => {
@@ -58,19 +56,50 @@ export default function ProductoDetallePage() {
     }
   };
 
-  const handleAgregarCarrito = () => {
-    if (producto) {
-      agregarItem(producto, cantidad);
-      setToast({ show: true, message: "¡Agregaste al carrito!", type: "success" });
+  // --- MANEJO DEL SELECT Y EL INPUT ---
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const val = e.target.value;
+    if (val === "more") {
+      setInputVisible(true);
+      setCantidad(1);
+    } else {
+      setCantidad(Number(val));
     }
   };
 
-  const incrementar = () => {
-    if (producto && cantidad < producto.stock) setCantidad(c => c + 1);
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let val = Number(e.target.value);
+    if (!producto) return;
+    if (val < 1) val = 1;
+    if (val > producto.stock) val = producto.stock;
+    setCantidad(val);
   };
 
-  const decrementar = () => {
-    if (cantidad > 1) setCantidad(c => c - 1);
+  // 👇 Función para volver al select
+  const handleResetInput = () => {
+    setInputVisible(false);
+    setCantidad(1);
+  };
+
+  const handleAgregarCarrito = () => {
+    if (!producto) return;
+
+    const itemEnCarrito = carrito.find((i) => i.producto.id === producto.id);
+    const cantidadEnCarrito = itemEnCarrito ? itemEnCarrito.cantidad : 0;
+    const totalFinal = cantidadEnCarrito + cantidad;
+
+    if (totalFinal > producto.stock) {
+      const disponibles = producto.stock - cantidadEnCarrito;
+      let mensaje = disponibles <= 0
+        ? "¡Ya tienes todo el stock en tu carrito!"
+        : `Solo quedan ${producto.stock}. Puedes agregar ${disponibles} más.`;
+
+      setToast({ show: true, message: mensaje, type: "error" });
+      return;
+    }
+
+    agregarItem(producto, cantidad);
+    setToast({ show: true, message: "¡Agregado al carrito!", type: "success" });
   };
 
   if (loading) return <div className="page-wrapper items-center justify-center">Cargando...</div>;
@@ -78,6 +107,11 @@ export default function ProductoDetallePage() {
 
   const mensajeWhatsapp = `Hola! Me interesa el producto *${producto.nombre}* que vi en la web.`;
   const linkWhatsapp = `https://wa.me/5493564622216?text=${encodeURIComponent(mensajeWhatsapp)}`;
+
+  // Opciones del select
+  const limiteSelect = 6;
+  const maxOptions = Math.min(producto.stock, limiteSelect);
+  const options = Array.from({ length: maxOptions }, (_, i) => i + 1);
 
   return (
     <div className="page-wrapper bg-white">
@@ -87,9 +121,8 @@ export default function ProductoDetallePage() {
       <div className="product-detail-container">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
 
-          {/* COLUMNA IZQUIERDA: FOTO Y DESCRIPCIÓN */}
+          {/* COLUMNA IZQUIERDA */}
           <div className="lg:col-span-2">
-            {/* Imagen Principal */}
             <div className="ml-main-image-container">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
@@ -99,61 +132,87 @@ export default function ProductoDetallePage() {
               />
             </div>
 
-            {/* Descripción extendida */}
             <div className="ml-description-box">
               <h2 className="ml-desc-title">Descripción</h2>
-              <p className="ml-desc-text">
-                {producto.descripcion}
-              </p>
+              <p className="ml-desc-text">{producto.descripcion}</p>
             </div>
           </div>
 
-          {/* COLUMNA DERECHA: CAJA DE COMPRA (STICKY) */}
+          {/* COLUMNA DERECHA (Panel de Compra) */}
           <div className="lg:col-span-1">
             <div className="ml-purchase-section">
 
-              {/* Categoría (Pequeño arriba) */}
               <div className="ml-meta-text uppercase tracking-wide">
                 {producto.categoria?.nombre || "Producto"}
               </div>
 
-              {/* Título */}
               <h1 className="ml-title">{producto.nombre}</h1>
 
-              {/* Marca (si existe) */}
               {producto.marca && (
                 <p className="text-sm text-blue-500 font-medium mb-4">
                   Marca: {producto.marca.nombre}
                 </p>
               )}
 
-              {/* Precio */}
               <div className="ml-price-container">
                 <span className="ml-price-real">$ {producto.precio.toLocaleString()}</span>
               </div>
 
-              {/* Stock y Cantidad */}
+              {/* LOGICA DE STOCK Y SELECTOR */}
               {producto.stock > 0 ? (
-                <div className="my-6">
-                  <div className="text-sm font-bold text-gray-900 mb-2">Stock disponible</div>
+                <div className="ml-qty-wrapper">
+                  <div className="ml-qty-row">
 
-                  {/* Estado Stock (Icono verde) */}
-                  <div className="flex items-center gap-2 mb-4 text-sm text-green-600 font-medium">
-                    <HiCheckCircle className="text-xl" />
-                    Unidades en depósito
+                    {/* LOGICA VISUAL CAMBIADA */}
+                    {inputVisible ? (
+                      <div className="ml-input-wrapper">
+                        <input
+                          type="number"
+                          min="1"
+                          max={producto.stock}
+                          value={cantidad}
+                          onChange={handleInputChange}
+                          className="ml-qty-input-custom"
+                          autoFocus
+                        />
+                        {/* Botón X para cancelar y volver al select */}
+                        <button
+                          onClick={handleResetInput}
+                          className="ml-qty-reset-btn"
+                          title="Volver al selector"
+                        >
+                          <HiX className="text-lg" />
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="w-32">
+                        <select
+                          value={cantidad}
+                          onChange={handleSelectChange}
+                          className="ml-qty-select"
+                        >
+                          {options.map(num => (
+                            <option key={num} value={num}>
+                              {num} {num === 1 ? "unidad" : "unidades"}
+                            </option>
+                          ))}
+
+                          {producto.stock > limiteSelect && (
+                            <option value="more">Más de {limiteSelect} unidades</option>
+                          )}
+                        </select>
+                      </div>
+                    )}
+
+                    <span className="ml-stock-display">
+                      ({producto.stock} disponibles)
+                    </span>
                   </div>
 
-                  <div className="flex items-center gap-2">
-                    <div className="bg-gray-100 rounded flex items-center">
-                      <button onClick={decrementar} disabled={cantidad <= 1} className="px-3 py-1 text-blue-600 font-bold disabled:text-gray-300">
-                        <HiMinus />
-                      </button>
-                      <span className="px-2 text-gray-900 font-medium">{cantidad}</span>
-                      <button onClick={incrementar} disabled={cantidad >= producto.stock} className="px-3 py-1 text-blue-600 font-bold disabled:text-gray-300">
-                        <HiPlus />
-                      </button>
+                  <div className="ml-qty-hint">
+                    <div className="flex items-center gap-1 font-medium">
+                      <HiCheckCircle className="text-green-500" /> Stock disponible
                     </div>
-                    <span className="text-xs text-gray-500">({producto.stock} disponibles)</span>
                   </div>
                 </div>
               ) : (
@@ -163,7 +222,7 @@ export default function ProductoDetallePage() {
                 </div>
               )}
 
-              {/* Botones de Acción */}
+              {/* BOTONES */}
               <button
                 onClick={handleAgregarCarrito}
                 disabled={producto.stock === 0}
@@ -182,7 +241,6 @@ export default function ProductoDetallePage() {
                 Consultar por WhatsApp
               </a>
 
-              {/* Info Vendedor Simple */}
               <div className="ml-seller-info">
                 <div className="ml-seller-text text-center">
                   Vendido por <span className="ml-seller-link text-black font-semibold">Electricidad Mattos</span>
@@ -200,7 +258,6 @@ export default function ProductoDetallePage() {
               {relacionados.map((rel) => (
                 <Link href={`/productos/${rel.id}`} key={rel.id} className="card group border-0 shadow-sm hover:shadow-lg">
                   <div className="card-image-container border-b-0 h-56">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={rel.imagenUrl || "/placeholder.png"} alt={rel.nombre} className="card-image" />
                   </div>
                   <div className="p-4 border-t border-gray-50">

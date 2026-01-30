@@ -67,7 +67,7 @@ export default function Navbar() {
                   <Link href="/login" className="nav-btn-login">
                     INGRESAR
                   </Link>
-                  <Link href="/registro" className="nav-link-register">
+                  <Link href="/register" className="nav-link-register">
                     Crear Cuenta
                   </Link>
                 </div>

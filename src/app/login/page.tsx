@@ -2,17 +2,17 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation"; // Volvemos a usar router
+import { useRouter } from "next/navigation";
 import { HiUser, HiLockClosed } from "react-icons/hi";
 import { loginUsuario } from "@/services/api";
 import Toast from "@/components/Toast";
-import { useAuth } from "@/context/AuthContext"; // 👇 Importamos el hook
+import { useAuth } from "@/context/AuthContext";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
-  const { login } = useAuth(); // 👇 Usamos la función del contexto
+  const { login } = useAuth();
 
   const [toast, setToast] = useState({ show: false, message: "", type: "success" as "success" | "error" });
 
@@ -27,14 +27,10 @@ export default function LoginPage() {
       const usuarioApi = await loginUsuario({ email, password });
 
       mostrarNotificacion(`¡Bienvenido, ${usuarioApi.nombre}!`, "success");
-
-      // 👇 ACÁ ESTÁ LA MAGIA:
-      // En vez de guardar a mano en localStorage, usamos la función login del contexto.
-      // Esto actualiza el estado global y el Navbar se entera al instante.
       login(usuarioApi);
 
       setTimeout(() => {
-        router.push("/"); // 👇 Navegación suave (sin flash)
+        router.push("/");
       }, 1500);
 
     } catch (error) {
@@ -42,7 +38,6 @@ export default function LoginPage() {
     }
   };
 
-  // ... (El resto del return sigue igual que antes)
   return (
     <div className="login-bg">
       <Toast
@@ -71,7 +66,7 @@ export default function LoginPage() {
           <button type="submit" className="btn-gradient">INGRESAR</button>
           <div className="flex justify-between items-center glass-text-small">
             <label className="flex items-center cursor-pointer"><input type="checkbox" className="mr-2 accent-yellow-500 h-4 w-4" /> Recordarme</label>
-            <a href="#" className="glass-link">¿Olvidaste clave?</a>
+            <a href="/recuperar" className="glass-link">¿Olvidaste clave?</a>
           </div>
         </form>
         <div className="mt-8 text-center glass-text-small">

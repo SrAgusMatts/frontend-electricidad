@@ -120,6 +120,38 @@ export async function loginUsuario(datos: any) {
     return await res.json();
 }
 
+export const solicitarRecuperacion = async (email: string): Promise<boolean> => {
+    try {
+        const res = await fetch(`${API_URL}/Auth/olvide-password`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email }),
+        });
+        
+        // Devolvemos true si salió bien (200 OK), false si falló
+        return res.ok;
+    } catch (error) {
+        console.error("Error en solicitarRecuperacion:", error);
+        throw error; // Relanzamos para que el componente sepa que hubo error de red
+    }
+}
+
+export const restablecerPassword = async (email: string, token: string, nuevaPassword: string) => {
+    try {
+        const res = await fetch(`${API_URL}/Auth/reset-password`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, token, nuevaPassword }),
+        });
+
+        const data = await res.json();
+        return { ok: res.ok, message: data.message };
+    } catch (error) {
+        console.error("Error en restablecerPassword:", error);
+        throw error;
+    }
+}
+
 // ==========================================
 // PEDIDOS (NUEVO) 🛒
 // ==========================================

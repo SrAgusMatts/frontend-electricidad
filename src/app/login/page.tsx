@@ -24,17 +24,22 @@ export default function LoginPage() {
     e.preventDefault();
 
     try {
-      const usuarioApi = await loginUsuario({ email, password });
+      const data = await loginUsuario({ email, password });
 
-      mostrarNotificacion(`¡Bienvenido, ${usuarioApi.nombre}!`, "success");
-      login(usuarioApi);
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("usuario", JSON.stringify(data.usuario));
+
+      mostrarNotificacion(`¡Bienvenido, ${data.usuario.nombre}!`, "success");
+      
+      login(data.usuario);
 
       setTimeout(() => {
-        router.push("/");
+             router.push("/");
       }, 1500);
 
     } catch (error) {
-      mostrarNotificacion("Credenciales incorrectas. Intentá de nuevo.", "error");
+      console.error(error);
+      mostrarNotificacion("Email o contraseña incorrectos.", "error");
     }
   };
 

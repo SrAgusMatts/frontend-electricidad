@@ -4,6 +4,8 @@ import { useState, useEffect, useRef } from "react";
 import { HiChevronDown, HiCheck, HiPlus } from "react-icons/hi";
 import { crearMarca } from "@/services/api";
 import { Marca } from "@/types";
+import Toast from "./Toast";
+import { debug } from "console";
 
 interface Props {
     marcas: Marca[];
@@ -13,6 +15,10 @@ interface Props {
 }
 
 export default function SelectorMarca({ marcas, marcaSeleccionadaId, onSeleccionar, onNuevaMarcaCreada }: Props) {
+    const mostrarNotificacion = (message: string, type: "success" | "error") => {
+        setToast({ show: true, message, type });
+    };
+    const [toast, setToast] = useState({ show: false, message: "", type: "success" as "success" | "error" });
     const [busqueda, setBusqueda] = useState("");
     const [abierto, setAbierto] = useState(false);
     const [creando, setCreando] = useState(false);
@@ -40,15 +46,16 @@ export default function SelectorMarca({ marcas, marcaSeleccionadaId, onSeleccion
         : marcas.filter((m) => m.nombre.toLowerCase().includes(busqueda.toLowerCase()));
 
     const handleCrear = async () => {
+        debugger
         if (!busqueda.trim()) return;
         setCreando(true);
         try {
-            const nueva = await crearMarca(busqueda); 
-            onNuevaMarcaCreada(nueva);                
-            onSeleccionar(nueva.id);                  
+            const nueva = await crearMarca(busqueda);
+            onNuevaMarcaCreada(nueva);
+            onSeleccionar(nueva.id);
             setAbierto(false);
         } catch (error) {
-            alert("Error al crear la marca");
+            mostrarNotificacion("Error al crear la marca.", "error");
         } finally {
             setCreando(false);
         }
@@ -56,6 +63,13 @@ export default function SelectorMarca({ marcas, marcaSeleccionadaId, onSeleccion
 
     return (
         <div className="combo-container" ref={wrapperRef}>
+
+            <Toast
+                show={toast.show}
+                message={toast.message}
+                type={toast.type}
+                onClose={() => setToast({ ...toast, show: false })}
+            />
 
             <div className="combo-trigger" onClick={() => setAbierto(true)}>
                 <input

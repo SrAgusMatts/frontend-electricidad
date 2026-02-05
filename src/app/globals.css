@@ -1304,8 +1304,9 @@
   }
 
   .form-input {
-    @apply w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg outline-none transition-all;
-  }
+  /* 👇 CAMBIO: Saqué 'pl-10' y puse 'px-3' (espacio normal a los costados) */
+  @apply w-full px-3 py-3 border border-gray-300 rounded-lg outline-none transition-all;
+}
 
   .form-input:focus {
     @apply ring-2 ring-blue-500 border-blue-500;

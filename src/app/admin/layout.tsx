@@ -1,4 +1,4 @@
-"use client"; // 👈 Obligatorio porque usamos hooks y localStorage
+"use client";
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -9,30 +9,24 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { usuario } = useAuth(); // Traemos al usuario del contexto
+  const { usuario } = useAuth(); 
   const router = useRouter();
   const [authorized, setAuthorized] = useState(false);
 
   useEffect(() => {
-    // 1. Intentamos leer el usuario (del Contexto o del LocalStorage de respaldo)
     const checkAuth = () => {
-        // A veces el contexto tarda 1ms en cargar, por seguridad miramos localStorage también
         const storedUser = localStorage.getItem("usuario");
         const usuarioLocal = storedUser ? JSON.parse(storedUser) : null;
         
-        // Priorizamos el contexto, si no hay, usamos el local
         const usuarioActual = usuario || usuarioLocal;
 
-        // CASO A: No hay nadie logueado
         if (!usuarioActual) {
             router.replace("/login");
             return;
         }
 
-        // CASO B: Está logueado pero NO es Admin (es Cliente)
-        // Asegurate que en tu BD el rol esté escrito así: "Admin" (o "Administrador")
         if (usuarioActual.rol !== "Admin") {
-            router.replace("/"); // Lo mandamos al inicio
+            router.replace("/");
             return;
         }
 
@@ -42,7 +36,6 @@ export default function AdminLayout({
     checkAuth();
   }, [usuario, router]);
 
-  // Mientras verificamos, mostramos una pantalla de carga para que no vea nada "prohibido"
   if (!authorized) {
     return (
       <div className="flex h-screen w-full items-center justify-center bg-gray-50">
@@ -54,10 +47,8 @@ export default function AdminLayout({
     );
   }
 
-  // Si pasó la seguridad, renderizamos el contenido (los pedidos, productos, etc.)
   return (
     <div className="admin-panel-wrapper">
-        {/* Acá podrías agregar un Navbar o Sidebar exclusivo para Admin si quisieras */}
         {children}
     </div>
   );

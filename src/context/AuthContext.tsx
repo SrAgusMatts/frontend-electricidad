@@ -24,7 +24,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  // Al cargar la app, revisamos si hay alguien guardado
   useEffect(() => {
     const storedUser = localStorage.getItem("usuario_mattos");
     if (storedUser) {
@@ -38,13 +37,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setLoading(false);
   }, []);
 
-  // Función para Iniciar Sesión (Guarda en estado y localStorage)
   const login = (userData: Usuario) => {
     setUsuario(userData);
     localStorage.setItem("usuario_mattos", JSON.stringify(userData));
   };
 
-  // Función para Cerrar Sesión
   const logout = () => {
     setUsuario(null);
     localStorage.removeItem("usuario_mattos");
@@ -58,7 +55,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 }
 
-// Hook para usarlo fácil en cualquier componente
 export function useAuth() {
   const context = useContext(AuthContext);
   if (context === undefined) {

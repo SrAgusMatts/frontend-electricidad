@@ -10,13 +10,19 @@ import {
 } from "@/services/api";
 import SelectorMarca from "@/components/SelectorMarca";
 import { Marca } from "@/types";
+import Toast from "@/components/Toast";
 
 export default function EditarProductoPage() {
   const router = useRouter();
   const params = useParams();
   const id = Number(params.id);
 
+  const mostrarNotificacion = (message: string, type: "success" | "error") => {
+    setToast({ show: true, message, type });
+  };
+
   // Estados
+  const [toast, setToast] = useState({ show: false, message: "", type: "success" as "success" | "error" });
   const [nombre, setNombre] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [precio, setPrecio] = useState("");
@@ -60,8 +66,11 @@ export default function EditarProductoPage() {
       setMarcasDisponibles(marcas);
     } catch (error) {
       console.error("Error cargando datos:", error);
-      alert("Error al cargar producto");
-      router.push("/admin");
+      mostrarNotificacion("Error cargando datos del producto.", "error");
+      
+      setTimeout(() => {
+        router.push("/admin/panel");
+      }, 1500);
     } finally {
       setLoading(false);
     }
@@ -91,12 +100,15 @@ export default function EditarProductoPage() {
       }
 
       await actualizarProducto(id, formData);
-      alert("¡Producto actualizado correctamente!");
-      router.push("/admin");
+      mostrarNotificacion(`Producto actualizado correctamente`, "success");
+
+      setTimeout(() => {
+        router.push("/admin/panel");
+      }, 1500);
 
     } catch (error) {
       console.error("Error updating:", error);
-      alert("Ocurrió un error al guardar.");
+      mostrarNotificacion("Ocurrió un error al guardar.", "error");
     } finally {
       setGuardando(false);
     }
@@ -106,6 +118,14 @@ export default function EditarProductoPage() {
 
   return (
     <div className="admin-wrapper">
+
+      <Toast
+        show={toast.show}
+        message={toast.message}
+        type={toast.type}
+        onClose={() => setToast({ ...toast, show: false })}
+      />
+
       <Navbar />
 
       <main className="admin-container">

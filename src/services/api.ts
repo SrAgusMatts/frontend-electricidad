@@ -78,14 +78,23 @@ export async function obtenerMarcas(): Promise<Marca[]> {
 }
 
 export async function crearMarca(nombre: string): Promise<Marca> {
-    ignoreSSL();
+
+    const token = localStorage.getItem("token");
+
     const res = await fetch(`${API_URL}/Marcas`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nombre }),
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ nombre: nombre }),
     });
 
-    if (!res.ok) throw new Error("Error al crear marca");
+    if (!res.ok) {
+        const textoError = await res.text();
+        throw new Error(textoError || "Error al crear marca");
+    }
+
     return await res.json();
 }
 
@@ -127,7 +136,7 @@ export const solicitarRecuperacion = async (email: string): Promise<boolean> => 
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email }),
         });
-        
+
         // Devolvemos true si salió bien (200 OK), false si falló
         return res.ok;
     } catch (error) {

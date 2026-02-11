@@ -1,10 +1,11 @@
+import Link from "next/link";
 import { HiLocationMarker, HiPhone, HiMail } from "react-icons/hi";
 
 export default function Footer() {
   return (
     <footer className="footer-wrapper">
       <div className="footer-container">
-        
+
         {/* Columna 1: Marca */}
         <div className="footer-col">
           <h3 className="footer-brand">
@@ -19,8 +20,11 @@ export default function Footer() {
         <div className="footer-col">
           <h4 className="footer-title">Navegación</h4>
           <ul className="footer-list">
-            <li><span className="footer-link">Inicio</span></li>
-            <li><span className="footer-link">Catálogo Completo</span></li>
+            <li>
+              <Link href="/" className="footer-link">
+                Inicio
+              </Link>
+            </li>
             <li><span className="footer-link">Ofertas Especiales</span></li>
             <li><span className="footer-link">Contacto</span></li>
           </ul>

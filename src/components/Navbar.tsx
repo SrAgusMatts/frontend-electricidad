@@ -29,7 +29,7 @@ export default function Navbar() {
           <div className="nav-menu-desktop">
             <div className="nav-desktop-list">
               <Link href="/" className="nav-link">Inicio</Link>
-              <Link href="/#catalogo" className="nav-link">Catálogo</Link>
+              <Link href="/catalogo" className="nav-link">Catálogo</Link>
 
               <Link href="/carrito" className="nav-cart-link">
                 <HiShoppingCart className="nav-cart-icon" />

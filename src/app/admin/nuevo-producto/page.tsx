@@ -27,7 +27,7 @@ export default function NuevoProductoPage() {
     const [marcaId, setMarcaId] = useState<number | "">("");
 
     useEffect(() => {
-        const usuario = JSON.parse(localStorage.getItem("usuarioMattos") || "null");
+        const usuario = JSON.parse(localStorage.getItem("usuario_mattos") || "null");
         if (!usuario || usuario.rol !== "Admin") {
             router.push("/");
         }

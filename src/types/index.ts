@@ -7,6 +7,11 @@ export interface Marca {
     nombre: string;
 }
 
+export interface Categoria {
+    id: number;
+    nombre: string;
+}
+
 export interface Producto {
     id: number;
     nombre: string;
@@ -15,9 +20,7 @@ export interface Producto {
     stock: number;
     imagenUrl: string;
     categoriaId?: number;
-    categoria?: { nombre: string };
-
-    // Relación con Marca
+    categoria?: Categoria;
     marca?: Marca;
     marcaId?: number;
 }

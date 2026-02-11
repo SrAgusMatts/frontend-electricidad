@@ -1304,9 +1304,9 @@
   }
 
   .form-input {
-  /* 👇 CAMBIO: Saqué 'pl-10' y puse 'px-3' (espacio normal a los costados) */
-  @apply w-full px-3 py-3 border border-gray-300 rounded-lg outline-none transition-all;
-}
+    /* 👇 CAMBIO: Saqué 'pl-10' y puse 'px-3' (espacio normal a los costados) */
+    @apply w-full px-3 py-3 border border-gray-300 rounded-lg outline-none transition-all;
+  }
 
   .form-input:focus {
     @apply ring-2 ring-blue-500 border-blue-500;
@@ -1366,5 +1366,137 @@
   .page-transition-wrapper {
     @apply w-full min-h-screen;
     animation: pageEnter 0.3s ease-out forwards;
+  }
+
+  /* =========================================
+   CATÁLOGO PREMIUM (REMASTERIZADO) 🎨
+   ========================================= */
+
+  /* --- HERO SECTION (La franja azul de arriba) --- */
+  .catalog-header-bg {
+    @apply bg-slate-900 text-white pt-10 pb-20 px-4 mb-[-3rem];
+    /* mb negativo para que el buscador se monte encima */
+  }
+
+  .catalog-header-container {
+    @apply max-w-7xl mx-auto;
+  }
+
+  .catalog-title {
+    @apply text-3xl md:text-4xl font-extrabold tracking-tight mb-2 text-white;
+  }
+
+  .catalog-subtitle {
+    @apply text-slate-400 text-sm md:text-base max-w-2xl;
+  }
+
+  /* --- BARRA DE BÚSQUEDA FLOTANTE --- */
+  .catalog-search-wrapper {
+    @apply relative z-10 max-w-7xl mx-auto px-4 mb-10;
+  }
+
+  .catalog-search-inner {
+    @apply relative flex items-center shadow-xl rounded-lg overflow-hidden border border-slate-200;
+  }
+
+  .catalog-search-input {
+    @apply w-full p-5 pl-12 text-lg bg-white outline-none text-slate-800 placeholder-slate-400 transition-all;
+  }
+
+  .catalog-search-input:focus {
+    @apply ring-2 ring-yellow-400;
+    /* Foco amarillo marca */
+  }
+
+  .catalog-search-icon {
+    @apply absolute left-4 text-slate-400 text-xl pointer-events-none;
+  }
+
+  /* --- SIDEBAR CON ESTILO --- */
+  .catalog-sidebar-card {
+    /* Borde superior amarillo para identidad de marca */
+    @apply w-full md:w-1/4 bg-white p-6 rounded-xl shadow-md border border-slate-100 h-fit sticky top-24 border-t-4 border-t-yellow-400;
+  }
+
+  .catalog-filter-title {
+    @apply font-bold text-slate-900 text-lg mb-4 flex items-center gap-2 uppercase tracking-wider text-xs;
+  }
+
+  .catalog-filter-list {
+    @apply flex flex-col gap-2 max-h-60 overflow-y-auto pr-2 custom-scrollbar;
+  }
+
+  /* Checkboxes personalizados */
+  .catalog-filter-item {
+    @apply flex items-center gap-3 cursor-pointer p-2 rounded-lg transition-all hover:bg-slate-50 text-slate-600 text-sm font-medium;
+  }
+
+  .catalog-filter-item:hover {
+    @apply text-slate-900;
+  }
+
+  /* Cuando está activo (necesitarás lógica condicional en el JSX o usar clases de utilidad directa) */
+  .catalog-checkbox {
+    @apply w-4 h-4 rounded border-slate-300 text-yellow-500 focus:ring-yellow-500 cursor-pointer;
+  }
+
+  .catalog-divider {
+    @apply my-6 border-t border-slate-100;
+  }
+
+  /* --- CONTENIDO PRINCIPAL --- */
+  .catalog-main-content {
+    @apply w-full md:w-3/4;
+  }
+
+  .catalog-empty-state {
+    @apply flex flex-col items-center justify-center py-20 bg-white rounded-xl border border-dashed border-slate-300 text-slate-500;
+  }
+
+  /* --- SECCIONES DE MARCA (BAW, ETC) --- */
+  .catalog-brand-section {
+    @apply mb-14 bg-white p-6 rounded-xl shadow-sm border border-slate-100;
+  }
+
+  .catalog-brand-header {
+    @apply flex items-center justify-between mb-8 pb-4 border-b border-slate-100;
+  }
+
+  .catalog-brand-title {
+    /* Título oscuro con subrayado amarillo grueso */
+    @apply text-2xl font-black text-slate-800 uppercase tracking-tighter relative inline-block;
+  }
+
+  /* El detalle amarillo debajo del título */
+  .catalog-brand-title::after {
+    content: '';
+    @apply absolute -bottom-4 left-0 w-12 h-1 bg-yellow-400 rounded-full;
+  }
+
+  .catalog-products-grid {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6;
+  }
+}
+
+@layer utilities {
+  /* Ancho de la barra */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px; /* Finita y elegante */
+  }
+
+  /* El fondo de la barra (el caminito) */
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent; 
+  }
+
+  /* El "dedo" que se mueve (el thumb) */
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #cbd5e1; /* Un gris suave (slate-300) */
+    border-radius: 20px;       /* Redondito */
+  }
+
+  /* Cuando le pasás el mouse por encima */
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: #94a3b8; /* Un gris más oscuro (slate-400) */
   }
 }
